@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 3
+  tags:
+  - U Button
+  - pathMarker
+  - TutorialController
+  - Crate
+  - bonFire
+  - Fire
+  - Enemy
+  - pushbox
+  - hurt box
+  - Enemy_Hitbox
+  - OptionUI
+  - xSlider
+  - ySlider
+  - cinemaCam
+  - Teleporter
+  - Lever
+  - SoulGirl
+  - Text Box
+  - EnemyHealthBar
+  - PlayerUI
+  - Single
+  - Debugger
+  - Player_Hitbox
+  - ammo
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - FireLayer
+  - Water
+  - UI
+  - FloorLayer
+  - Enemy_Hitbox
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  m_RenderingLayers:
+  - Default
