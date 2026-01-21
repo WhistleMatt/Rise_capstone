@@ -23,13 +23,29 @@ public class Interactable : MonoBehaviour
         unityEvent.Invoke(invoker);
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            other.gameObject.GetComponent<playerEnvironmentInteraction>().setInteractable(this.gameObject);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            other.gameObject.GetComponent<playerEnvironmentInteraction>().setInteractable(null);
+        }
+    }
+
     private void OnTriggerStay(Collider other)
     {
 
-     if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("we have been invoked");
-            unityEvent.Invoke(other.gameObject);
-         }
+     //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+            //Debug.Log("we have been invoked");
+            //unityEvent.Invoke(other.gameObject);
+         //}
     }
 }

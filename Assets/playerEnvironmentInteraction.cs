@@ -31,7 +31,7 @@ public class playerEnvironmentInteraction : MonoBehaviour
     public void setInteractable(GameObject _object)
     {
         interactObject = _object;
-        GameObject.FindGameObjectWithTag("Debugger").GetComponent<FileWriter>().writeDebug("Interaction Object Set: " + interactObject);
+        //GameObject.FindGameObjectWithTag("Debugger").GetComponent<FileWriter>().writeDebug("Interaction Object Set: " + interactObject);
     }
     public GameObject getInteractObj()
     {
@@ -74,6 +74,9 @@ public class playerEnvironmentInteraction : MonoBehaviour
             {
                 interactObject.transform.gameObject.GetComponentInChildren<LeverController>().open();
                 GameObject.FindGameObjectWithTag("Debugger").GetComponent<FileWriter>().writeDebug("Interaction Object Call: Lever");
+            }else
+            {
+                interactObject.GetComponent<Interactable>().interact(this.gameObject);
             }
         }
     }

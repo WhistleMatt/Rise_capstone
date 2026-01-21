@@ -54,7 +54,7 @@ public class UIManager : MonoBehaviour
 
     public void Unpause()
     {
-        GameObject.FindGameObjectWithTag("Single").GetComponent<PlayFabStats>().SetStatistics();
+        //GameObject.FindGameObjectWithTag("Single").GetComponent<PlayFabStats>().SetStatistics();
         Cursor.visible = false;
         GameObject.FindGameObjectWithTag("cinemaCam").GetComponent<CinemachineFreeLook>().enabled = true;
         if (m_confirmQuit.activeInHierarchy)

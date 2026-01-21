@@ -10,6 +10,12 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoInputController
 {
+    private enum PlayerState
+    {
+        Unpaused = 0,
+        Paused = 1
+    }
+
     public CharacterController controller;
     private PlayerStatsController playerStatsController;
     public Transform cam;
@@ -18,13 +24,16 @@ public class PlayerController : MonoInputController
     public float gravity;
     public float jumpPower;
     public Animator animatorController;
+    
+    private PlayerState m_playState = PlayerState.Unpaused;
+    private int m_playStateSwapped = 0;
     //ublic float mass;
 
     private InputAction move;
     private InputAction jump;
     public PlayerInput input;
     private bool updateStats = false;
-    private bool hasSpawned;
+    private bool hasSpawned = true;
 
     public bool isRolling = false;
     public bool isBlocking = false;
@@ -90,11 +99,30 @@ public class PlayerController : MonoInputController
     {
         if(context.performed)
         {
-           Cursor.lockState = CursorLockMode.Confined;
-            input.SwitchCurrentActionMap("UI");
-            UIManager.instance.PauseMenu();
+            if (m_playStateSwapped == 1)
+            {
+                m_playStateSwapped = 0;
+                return;
+            }
+            else
+            {
+                m_playStateSwapped = 1;
+            }
+            if (m_playState == PlayerState.Unpaused)
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+                input.SwitchCurrentActionMap("UI");
+                UIManager.instance.PauseMenu();
+                m_playState = PlayerState.Paused;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                input.SwitchCurrentActionMap("Player");
+                UIManager.instance.Unpause();
+                m_playState = PlayerState.Unpaused;
+            }
         }
-       
     }
 
     public void LockMouse(InputAction.CallbackContext context)
@@ -139,6 +167,11 @@ public class PlayerController : MonoInputController
 
         if (input.currentActionMap.name != "DialogueBox" &&( !isRolling && !isBlocking) )
         {
+            if (m_playState == PlayerState.Paused) 
+            {
+                moveDirection = Vector3.zero;
+                return; 
+            }
             moveDirection = move.ReadValue<Vector3>();
             moveDirection.Normalize();
             //if (/*!getBlockState()*/!performingAction() && moveDirection != Vector3.zero)

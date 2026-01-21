@@ -54,7 +54,7 @@ public class Teleport : MonoBehaviour
                 GameObject.FindGameObjectWithTag("Debugger").GetComponent<FileWriter>().writeDebug("Interaction Object Response: Knight Statue; Teleport Selected Level 2");
                 GameObject.FindGameObjectWithTag("Debugger").GetComponent<FileWriter>().writeDebug("Interaction Object Response: Knight Statue; Load Async Called");
                 GameObject.FindGameObjectWithTag("Debugger").GetComponent<FileWriter>().writeDebug("Interaction Object Response: Knight Statue; Load Async Called Confirmed");
-                SceneManager.LoadScene("level1");
+                //SceneManager.LoadScene("level1");
                 // SceneManager.LoadSceneAsync(level);
                 // SceneManager.LoadSceneAsync("Level2");
             }

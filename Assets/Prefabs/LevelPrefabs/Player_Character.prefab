@@ -400,7 +400,7 @@ MonoBehaviour:
     m_ActionName: 'UI/Submit[/Keyboard/enter,/XInputControllerWindows/buttonSouth]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 7906278941180377644}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: LockMouse
         m_Mode: 0
@@ -444,7 +444,7 @@ MonoBehaviour:
     m_ActionName: UI/TrackedDeviceOrientation
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 7906278941180377644}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: UnlockMouse
         m_Mode: 0
