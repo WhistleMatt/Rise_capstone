@@ -10,9 +10,13 @@ public class EnemyChase : FSMC_Behaviour
 {
     private bool chasing = false;
 
+    private PlayerStatsController m_singleplayerStatController;
+    private Multiplayer_Enemy_Stat_Controller m_multiStatController;
+
     public override void StateInit(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
-    
+        m_singleplayerStatController = executer.gameObject.GetComponent<PlayerStatsController>();
+        m_multiStatController = executer.gameObject.GetComponent<Multiplayer_Enemy_Stat_Controller>();
     }
     public override void OnStateEnter(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
@@ -25,35 +29,72 @@ public class EnemyChase : FSMC_Behaviour
 
     public override void OnStateUpdate(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
-        if (executer.gameObject.GetComponent<PlayerStatsController>().getPHealth() <= 0)
+        if (m_singleplayerStatController != null)
         {
-            stateMachine.SetBool("Return", false);
-            stateMachine.SetBool("Attack", false);
-            stateMachine.SetBool("Chase", false);
-            stateMachine.SetBool("Dead", true);
-        }
-        if (Vector3.Distance(executer.gameObject.transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) <= 2)
-        {
-            stateMachine.SetBool("Chase", false);
-            stateMachine.SetBool("Attack", true);
-        }
+            if (executer.gameObject.GetComponent<PlayerStatsController>().getPHealth() <= 0)
+            {
+                stateMachine.SetBool("Return", false);
+                stateMachine.SetBool("Attack", false);
+                stateMachine.SetBool("Chase", false);
+                stateMachine.SetBool("Dead", true);
+            }
+            if (Vector3.Distance(executer.gameObject.transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) <= 2)
+            {
+                stateMachine.SetBool("Chase", false);
+                stateMachine.SetBool("Attack", true);
+            }
 
-        if (Vector3.Distance(executer.gameObject.transform.position,executer.gameObject.GetComponent<EnemyPathController>().getCurrentDestination().transform.position)<20 &&chasing==true)
-        {
-            executer.gameObject.GetComponent<NavMeshAgent>().SetDestination(GameObject.FindGameObjectWithTag("Player").transform.position);
-            executer.gameObject.GetComponent<Animator>().SetBool("isWalking", true);
-           
+            if (Vector3.Distance(executer.gameObject.transform.position, executer.gameObject.GetComponent<EnemyPathController>().getCurrentDestination().transform.position) < 20 && chasing == true)
+            {
+                executer.gameObject.GetComponent<NavMeshAgent>().SetDestination(GameObject.FindGameObjectWithTag("Player").transform.position);
+                executer.gameObject.GetComponent<Animator>().SetBool("isWalking", true);
 
-         
+
+
+            }
+            else
+            {
+                chasing = false;
+                executer.gameObject.GetComponent<NavMeshAgent>().SetDestination(executer.gameObject.GetComponent<EnemyPathController>().getCurrentDestination().transform.position);
+                if (Vector3.Distance(executer.gameObject.transform.position, executer.gameObject.GetComponent<EnemyPathController>().getCurrentDestination().transform.position) <= 2)
+                {
+                    stateMachine.SetBool("Chase", false);
+                    stateMachine.SetBool("Return", true);
+                }
+            }
         }
         else
         {
-            chasing = false;
-            executer.gameObject.GetComponent<NavMeshAgent>().SetDestination(executer.gameObject.GetComponent<EnemyPathController>().getCurrentDestination().transform.position);
-            if (Vector3.Distance(executer.gameObject.transform.position, executer.gameObject.GetComponent<EnemyPathController>().getCurrentDestination().transform.position) <=2)
+            if (m_multiStatController.getPHealth() <= 0)
+            {
+                stateMachine.SetBool("Return", false);
+                stateMachine.SetBool("Attack", false);
+                stateMachine.SetBool("Chase", false);
+                stateMachine.SetBool("Dead", true);
+            }
+            if (Vector3.Distance(executer.gameObject.transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) <= 2)
             {
                 stateMachine.SetBool("Chase", false);
-                stateMachine.SetBool("Return", true);
+                stateMachine.SetBool("Attack", true);
+            }
+
+            if (Vector3.Distance(executer.gameObject.transform.position, executer.gameObject.GetComponent<EnemyPathController>().getCurrentDestination().transform.position) < 20 && chasing == true)
+            {
+                executer.gameObject.GetComponent<NavMeshAgent>().SetDestination(GameObject.FindGameObjectWithTag("Player").transform.position);
+                executer.gameObject.GetComponent<Animator>().SetBool("isWalking", true);
+
+
+
+            }
+            else
+            {
+                chasing = false;
+                executer.gameObject.GetComponent<NavMeshAgent>().SetDestination(executer.gameObject.GetComponent<EnemyPathController>().getCurrentDestination().transform.position);
+                if (Vector3.Distance(executer.gameObject.transform.position, executer.gameObject.GetComponent<EnemyPathController>().getCurrentDestination().transform.position) <= 2)
+                {
+                    stateMachine.SetBool("Chase", false);
+                    stateMachine.SetBool("Return", true);
+                }
             }
         }
         

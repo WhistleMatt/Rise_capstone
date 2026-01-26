@@ -473,6 +473,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitBoxLogic
   id: 1
+  playerStatsController: {fileID: 4678568777662558725}
+  playerEnemyStatsController: {fileID: 0}
 --- !u!136 &2309128112917703837
 CapsuleCollider:
   m_ObjectHideFlags: 0

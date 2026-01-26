@@ -4956,6 +4956,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitBoxLogic
   id: 1
+  playerStatsController: {fileID: 7391877664230741103}
+  playerEnemyStatsController: {fileID: 0}
 --- !u!1 &1879625267801811
 GameObject:
   m_ObjectHideFlags: 0
@@ -5154,6 +5156,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitBoxLogic
   id: 1
+  playerStatsController: {fileID: 7628388707599442543}
+  playerEnemyStatsController: {fileID: 0}
 --- !u!1 &1978563998034671
 GameObject:
   m_ObjectHideFlags: 0

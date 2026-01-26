@@ -120,6 +120,7 @@ public class EnemyPathController : MonoBehaviour
     public void disablePathing()
     {
         pathing = false;
+        this.gameObject.GetComponent<NavMeshAgent>().isStopped = true;
         Debug.Log("Path Disabled");
     }
     public GameObject getCurrentDestination()

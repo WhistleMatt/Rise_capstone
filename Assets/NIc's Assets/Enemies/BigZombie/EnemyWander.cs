@@ -4,15 +4,22 @@ using UnityEngine;
 using FSMC.Runtime;
 using System;
 
-//Nicolas Chatziargiriou 
-
+//written byt Nicolas Chatziargiriou 
+//extended by Matthew Whistle
 
 
 public class EnemyWander : FSMC_Behaviour
 {
+    private Network_Player_Controller[] m_players = {null};
+    private Network_Player_Controller m_player_to_chase;
+    private PlayerStatsController m_singleplayerStatController;
+    private Multiplayer_Enemy_Stat_Controller m_multiStatController;
+
     public override void StateInit(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
-       
+        //m_players = GameObject.FindObjectsByType<Network_Player_Controller>(FindObjectsSortMode.InstanceID);
+        m_singleplayerStatController = executer.gameObject.GetComponent<PlayerStatsController>();
+        m_multiStatController = executer.gameObject.GetComponent<Multiplayer_Enemy_Stat_Controller>();
     }
     public override void OnStateEnter(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
@@ -26,18 +33,46 @@ public class EnemyWander : FSMC_Behaviour
 
     public override void OnStateUpdate(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
-    if (Vector3.Distance(executer.gameObject.transform.position, GameObject.FindGameObjectWithTag("Player").transform.position)<=5)
+        m_players = GameObject.FindObjectsByType<Network_Player_Controller>(FindObjectsSortMode.InstanceID);
+        if (m_players.Length == 0)
         {
-            executer.gameObject.GetComponent<EnemyPathController>().disablePathing();
-            stateMachine.SetBool("Chase", true);
+            //if (Vector3.Distance(executer.gameObject.transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) <= 5)
+            //{
+                //executer.gameObject.GetComponent<EnemyPathController>().disablePathing();
+                //stateMachine.SetBool("Chase", true);
+            //}
         }
-
-    if (executer.gameObject.GetComponent<PlayerStatsController>().getPHealth()<=0)
+        else
         {
-            stateMachine.SetBool("Return", false);
-            stateMachine.SetBool("Attack", false);
-            stateMachine.SetBool("Chase", false);
-            stateMachine.SetBool("Dead", true);
+            foreach (Network_Player_Controller player in m_players)
+            {
+                if (Vector3.Distance(executer.gameObject.transform.position, player.transform.position) <= 5)
+                {
+                    m_player_to_chase = player;
+                    executer.gameObject.GetComponent<EnemyPathController>().disablePathing();
+                    stateMachine.SetBool("Chase", true);
+                }
+            }
+        }
+        if (m_singleplayerStatController != null)
+        {
+            if (m_singleplayerStatController.getPHealth() <= 0)
+            {
+                stateMachine.SetBool("Return", false);
+                stateMachine.SetBool("Attack", false);
+                stateMachine.SetBool("Chase", false);
+                stateMachine.SetBool("Dead", true);
+            }
+        }
+        else
+        {
+            if (m_multiStatController.getPHealth() <= 0)
+            {
+                stateMachine.SetBool("Return", false);
+                stateMachine.SetBool("Attack", false);
+                stateMachine.SetBool("Chase", false);
+                stateMachine.SetBool("Dead", true);
+            }
         }
     }
 

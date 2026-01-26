@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-//Nicolas Chatziargiriou
+//written by Nicolas Chatziargiriou
+//extended by Matthew Whistle
 public class PlayerStatsController : MonoBehaviour
 {
  

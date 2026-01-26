@@ -8,7 +8,25 @@ public class HurtBoxLogic : MonoBehaviour
     // Start is called before the first frame update
     private float damageMod;
     private GameObject enemyBar;
-    
+
+    private PlayerStatsController m_single_stats_cont;
+    private Multiplayer_Enemy_Stat_Controller m_multi_stat_con;
+
+    private void Start()
+    {
+        m_single_stats_cont = this.transform.parent.gameObject.GetComponent<PlayerStatsController>();
+        m_multi_stat_con = this.transform.parent.gameObject.GetComponent<Multiplayer_Enemy_Stat_Controller>();
+    }
+
+    private void Update()
+    {
+        if (m_single_stats_cont == null && m_multi_stat_con == null)
+        {
+            m_single_stats_cont = this.transform.parent.gameObject.GetComponent<PlayerStatsController>();
+            m_multi_stat_con = this.transform.parent.gameObject.GetComponent<Multiplayer_Enemy_Stat_Controller>();
+        }
+    }
+
     public void OnTriggerEnter(Collider other)
     {
         
@@ -17,25 +35,59 @@ public class HurtBoxLogic : MonoBehaviour
         {
             if (id!= hbl.id)
             {
-              //  if (hbl.id==HitBoxController.ePlayer.p1)
-              //  {
-                   
-                    damageMod = ((float)((other.GetComponentInParent<PlayerStatsController>().getPAttck() * 0.75) - (this.transform.parent.gameObject.GetComponent<PlayerStatsController>().getPDefense() * 0.15)));
-               // }
-               // else
-              //  {
-                    this.transform.parent.gameObject.GetComponent<PlayerStatsController>().setPHealth(this.transform.parent.gameObject.GetComponent<PlayerStatsController>().getPHealth() - damageMod);
-                this.GetComponent<AudioSource>().Play();
+                //  if (hbl.id==HitBoxController.ePlayer.p1)
+                //  {
 
-                //}
-                if (id == HitBoxController.ePlayer.p2)
+                if (m_single_stats_cont != null)
                 {
-                    enemyBar = GameObject.FindGameObjectWithTag("EnemyHealthBar");
-                    enemyBar.GetComponent<EnemyHealthBarController>().SetMaxHealth(this.transform.parent.gameObject.GetComponent<PlayerStatsController>().getPHealthMax());
-                    enemyBar.GetComponent<EnemyHealthBarController>().SetHealth(this.transform.parent.gameObject.GetComponent<PlayerStatsController>().getPHealth());
-                    if (this.transform.parent.gameObject.GetComponent<PlayerStatsController>().getPHealth()<=0)
+                    if (other.gameObject.GetComponentInChildren<HitBoxLogic>().GetSingleStats() != null)
                     {
-                        this.gameObject.SetActive(false);
+                        damageMod = ((float)((other.gameObject.GetComponentInChildren<HitBoxLogic>().GetSingleStats().getPAttck() * 0.75) - (m_single_stats_cont.getPDefense() * 0.15)));
+                        m_single_stats_cont.setPHealth(m_single_stats_cont.getPHealth() - damageMod);
+                    }
+                    else
+                    {
+                        damageMod = ((float)((other.gameObject.GetComponentInChildren<HitBoxLogic>().GetMultiStats().getPAttck() * 0.75) - (m_single_stats_cont.getPDefense() * 0.15)));
+                        m_single_stats_cont.setPHealth(m_single_stats_cont.getPHealth() - damageMod);
+                    }
+                        this.GetComponent<AudioSource>().Play();
+
+                    //}
+                    if (id == HitBoxController.ePlayer.p2)
+                    {
+                        enemyBar = GameObject.FindGameObjectWithTag("EnemyHealthBar");
+                        enemyBar.GetComponent<EnemyHealthBarController>().SetMaxHealth(m_single_stats_cont.getPHealthMax());
+                        enemyBar.GetComponent<EnemyHealthBarController>().SetHealth(m_single_stats_cont.getPHealth());
+                        if (m_single_stats_cont.getPHealth() <= 0)
+                        {
+                            this.gameObject.SetActive(false);
+                        }
+                    }
+                }
+                else
+                {
+                    if (other.gameObject.GetComponentInChildren<HitBoxLogic>().GetSingleStats() != null)
+                    {
+                        damageMod = ((float)((other.gameObject.GetComponentInChildren<HitBoxLogic>().GetSingleStats().getPAttck() * 0.75) - (m_multi_stat_con.getPDefense() * 0.15)));
+                        m_multi_stat_con.setPHealth(m_multi_stat_con.getPHealth() - damageMod);
+                    }
+                    else
+                    {
+                        damageMod = ((float)((other.gameObject.GetComponentInChildren<HitBoxLogic>().GetMultiStats().getPAttck() * 0.75) - (m_multi_stat_con.getPDefense() * 0.15)));
+                        m_multi_stat_con.setPHealth(m_multi_stat_con.getPHealth() - damageMod);
+                    }
+                        this.GetComponent<AudioSource>().Play();
+
+                    //}
+                    if (id == HitBoxController.ePlayer.p2)
+                    {
+                        enemyBar = GameObject.FindGameObjectWithTag("EnemyHealthBar");
+                        enemyBar.GetComponent<EnemyHealthBarController>().SetMaxHealth(m_multi_stat_con.getPHealthMax());
+                        enemyBar.GetComponent<EnemyHealthBarController>().SetHealth(m_multi_stat_con.getPHealth());
+                        if (m_multi_stat_con.getPHealth() <= 0)
+                        {
+                            this.gameObject.SetActive(false);
+                        }
                     }
                 }
                 
