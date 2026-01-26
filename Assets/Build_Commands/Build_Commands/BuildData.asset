@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b8af34c6a407944d96bfe99b26fd4e2, type: 3}
+  m_Script: {fileID: 11500000, guid: 29b7f4ae07f6cf1419c3d9cd2ee1ded2, type: 3}
   m_Name: BuildData
   m_EditorClassIdentifier: 
   uploadBuild: 1
-  studioName: mwhistleAtSheridan
+  studioName: mwhistleatsheridan
   projectName: rise-of-the-unblessed
   ignore: []
   updateBuildInfo: 1
-  buildNumber: 189
-  useGit: 0
-  branchName: 
-  sha: 
+  buildNumber: 6
+  useGit: 1
+  branchName: "main\r"
+  sha: "e1707ee\r"
