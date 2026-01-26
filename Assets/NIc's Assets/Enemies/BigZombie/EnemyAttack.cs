@@ -14,6 +14,7 @@ public class EnemyAttack : FSMC_Behaviour
 
     private PlayerStatsController m_singleplayerStatController;
     private Multiplayer_Enemy_Stat_Controller m_multiStatController;
+    private Network_Player_Controller m_player_to_chase;
 
     public override void StateInit(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
@@ -69,13 +70,30 @@ public class EnemyAttack : FSMC_Behaviour
                 stateMachine.SetBool("Chase", false);
                 stateMachine.SetBool("Dead", true);
             }
-            if (Vector3.Distance(executer.gameObject.transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) <= 2)
-            {
-                executer.gameObject.GetComponent<EnemyPathController>().disablePathing();
-                executer.gameObject.transform.LookAt(GameObject.FindGameObjectWithTag("Player").transform.position);
 
-                timer = timer + Time.deltaTime;
-                if (timer > attackTime)
+            Network_Player_Controller[] m_players = GameObject.FindObjectsByType<Network_Player_Controller>(FindObjectsSortMode.InstanceID);
+
+            foreach(Network_Player_Controller player in m_players)
+            {
+                if (Vector3.Distance(executer.gameObject.transform.position, player.gameObject.transform.position) <= 2)
+                {
+                    m_player_to_chase = player;
+                    break;
+                }
+            }
+
+            if (m_player_to_chase == null)
+            {
+                stateMachine.SetBool("Attack", false);
+                stateMachine.SetBool("Chase", true);
+                return;
+            }
+
+            executer.gameObject.GetComponent<EnemyPathController>().disablePathing();
+            executer.gameObject.transform.LookAt(m_player_to_chase.gameObject.transform.position);
+
+            timer = timer + Time.deltaTime;
+            if (timer > attackTime)
                 {
                     executer.gameObject.GetComponent<Animator>().SetTrigger("isAttacking");
                     timer = 0;
@@ -83,13 +101,6 @@ public class EnemyAttack : FSMC_Behaviour
                 }
 
             }
-            else
-            {
-                stateMachine.SetBool("Attack", false);
-                stateMachine.SetBool("Chase", true);
-
-            }
-        }
     }
 
     public override void OnStateExit(FSMC_Controller stateMachine, FSMC_Executer executer)

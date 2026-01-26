@@ -34,13 +34,16 @@ public class EnemyWander : FSMC_Behaviour
     public override void OnStateUpdate(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
         m_players = GameObject.FindObjectsByType<Network_Player_Controller>(FindObjectsSortMode.InstanceID);
-        if (m_players.Length == 0)
+        Debug.Log(m_players.Length);
+        if (m_players.Length <= 1)
         {
-            //if (Vector3.Distance(executer.gameObject.transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) <= 5)
-            //{
-                //executer.gameObject.GetComponent<EnemyPathController>().disablePathing();
-                //stateMachine.SetBool("Chase", true);
-            //}
+            var playerObject = GameObject.FindGameObjectWithTag("Player");
+            if (playerObject == null) return;
+            if (Vector3.Distance(executer.gameObject.transform.position, playerObject.transform.position) <= 5)
+            {
+                executer.gameObject.GetComponent<EnemyPathController>().disablePathing();
+                stateMachine.SetBool("Chase", true);
+            }
         }
         else
         {

@@ -29,6 +29,8 @@ public class EnemyPathController : MonoBehaviour
         Stand,Pace,Lap
     }
 
+    private PlayerStatsController playerStatsController;
+    private Multiplayer_Enemy_Stat_Controller multistatscont;
 
     public void resumePathing()
     {
@@ -114,13 +116,13 @@ public class EnemyPathController : MonoBehaviour
             return false;
         }
         pathing = true;
+        this.gameObject.GetComponent<NavMeshAgent>().isStopped = false;
         Debug.Log("Pathing Enabled");
         return true;
     }
     public void disablePathing()
     {
         pathing = false;
-        this.gameObject.GetComponent<NavMeshAgent>().isStopped = true;
         Debug.Log("Path Disabled");
     }
     public GameObject getCurrentDestination()
@@ -136,15 +138,37 @@ public class EnemyPathController : MonoBehaviour
     {
         currentNode = nodes[0];
         nextNode = nodes[0];
+        playerStatsController = GetComponent<PlayerStatsController>();
+        multistatscont = GetComponent<Multiplayer_Enemy_Stat_Controller>();
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if (playerStatsController != null)
+        {
+            if (playerStatsController.getPHealth() <= 0)
+            {
+                this.gameObject.GetComponent<NavMeshAgent>().isStopped = true;
+                return;
+            }
+        }
+
+        else
+        {
+            if (multistatscont.getPHealth() <= 0)
+            {
+                this.gameObject.GetComponent<NavMeshAgent>().isStopped = true;
+                return;
+            }
+        }
+
+
         if (pathing)
         {
-            timer = timer+Time.deltaTime;
-            if ( timer>=stompTimer)
+            timer = timer + Time.deltaTime;
+            if (timer >= stompTimer)
             {
                 _stompSound.Play();
                 timer = 0;

@@ -12,6 +12,7 @@ public class EnemyChase : FSMC_Behaviour
 
     private PlayerStatsController m_singleplayerStatController;
     private Multiplayer_Enemy_Stat_Controller m_multiStatController;
+    private Network_Player_Controller m_player_to_chase;
 
     public override void StateInit(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
@@ -72,19 +73,24 @@ public class EnemyChase : FSMC_Behaviour
                 stateMachine.SetBool("Chase", false);
                 stateMachine.SetBool("Dead", true);
             }
-            if (Vector3.Distance(executer.gameObject.transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) <= 2)
+
+            Network_Player_Controller[] m_players = GameObject.FindObjectsByType<Network_Player_Controller>(FindObjectsSortMode.InstanceID);
+
+            foreach (Network_Player_Controller player in m_players)
             {
-                stateMachine.SetBool("Chase", false);
-                stateMachine.SetBool("Attack", true);
+                if (Vector3.Distance(executer.gameObject.transform.position, player.gameObject.transform.position) <= 2)
+                {
+                    m_player_to_chase = player;
+                    stateMachine.SetBool("Chase", false);
+                    stateMachine.SetBool("Attack", true);
+
+                }
             }
 
             if (Vector3.Distance(executer.gameObject.transform.position, executer.gameObject.GetComponent<EnemyPathController>().getCurrentDestination().transform.position) < 20 && chasing == true)
             {
-                executer.gameObject.GetComponent<NavMeshAgent>().SetDestination(GameObject.FindGameObjectWithTag("Player").transform.position);
+                executer.gameObject.GetComponent<NavMeshAgent>().SetDestination(m_player_to_chase.gameObject.transform.position);
                 executer.gameObject.GetComponent<Animator>().SetBool("isWalking", true);
-
-
-
             }
             else
             {
