@@ -27,7 +27,7 @@ public class Multiplayer_Boss_Door : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void UpdateDoorStateServerRpc()
     {
         m_doorState.Value += 1;

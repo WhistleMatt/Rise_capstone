@@ -18,6 +18,7 @@ public class Multiplayer_Door_Levers : NetworkBehaviour
         m_doorScript = doorObject.GetComponent<Multiplayer_Boss_Door>();
     }
 
+
     // Update is called once per frame
     void Update()
     {
@@ -30,7 +31,7 @@ public class Multiplayer_Door_Levers : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void UnlockDoorServerRpc()
     {
         if (m_LeverPulled.Value == true) return;
@@ -39,7 +40,7 @@ public class Multiplayer_Door_Levers : NetworkBehaviour
 
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void RotateLeverServerRpc()
     {
         this.transform.rotation = Quaternion.Slerp(transform.rotation, _OnPos.rotation, _Speed * Time.deltaTime);

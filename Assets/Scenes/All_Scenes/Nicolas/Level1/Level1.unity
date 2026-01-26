@@ -19520,11 +19520,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7851965134186595487, guid: 418016126b6a01848848bade78095d35, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 2.6718013e-16
+      value: 2.6718016e-16
       objectReference: {fileID: 0}
     - target: {fileID: 7851965134186595487, guid: 418016126b6a01848848bade78095d35, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -1.1066964e-16
+      value: -1.1066965e-16
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
