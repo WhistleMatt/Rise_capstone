@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/All_Scenes/Nicolas/Level2/Level2.unity
     guid: dc5b61fde3a6c7145b2885369afb32bc
+  - enabled: 1
+    path: Assets/Scenes/All_Scenes/Mathew/Multiplayer_Level/Level_3.unity
+    guid: 4fd8a864b6cb42c489d214406af1ad3d
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 99f9c9493070a9d4c979a8fec7c5a8d3, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7, type: 2}
