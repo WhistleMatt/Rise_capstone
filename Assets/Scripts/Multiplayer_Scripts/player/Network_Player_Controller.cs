@@ -1,6 +1,9 @@
 using Unity.Netcode;
+using Unity.Networking;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 
 public class Network_Player_Controller : NetworkBehaviour
 {
@@ -34,46 +37,65 @@ public class Network_Player_Controller : NetworkBehaviour
         public float _x;
         public float _y;
         public float _z;
+        public float _angle;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T: IReaderWriter
         {
             serializer.SerializeValue(ref _x);
             serializer.SerializeValue(ref _y);
             serializer.SerializeValue(ref _z);
+            serializer.SerializeValue(ref _angle);
         }
 
-        public NetworkVectorData(float x = 0, float y = 0, float z = 0)
+        public NetworkVectorData(float x = 0, float y = 0, float z = 0, float angle = 0)
         {
             _x = x;
             _y = y;
             _z = z;
+            _angle = angle;
         }
     }
 
+    private enum PlayerState
+    {
+        Unpaused = 0,
+        Paused = 1
+    }
+
+    private PlayerState m_playState = PlayerState.Unpaused;
+    private int m_playStateSwapped = 0;
+
+    [SerializeField] private GameObject m_HealItemCanvas;
+    [SerializeField] private GameObject m_PlayerUICanvas;
+
     //private void OnEnable()
     //{
-        //move = playerControls.Player.Move;
-        //move.Enable();
+    //move = playerControls.Player.Move;
+    //move.Enable();
 
-        //  jump = playerControls.Player.Jump;
-        //  jump.Enable();
-        //  jump.performed += Jump;
+    //  jump = playerControls.Player.Jump;
+    //  jump.Enable();
+    //  jump.performed += Jump;
     //}
     //private void OnDisable()
     //{
-        //move.Disable();
-        //  jump.Disable();
+    //move.Disable();
+    //  jump.Disable();
     //}
 
     //private void Awake()
     //{
-        
-        //updateStats = true;
+
+    //updateStats = true;
     //}
 
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
+
+        NetworkManager.Singleton.OnClientDisconnectCallback += Singleton_OnClientDisconnectCallback;
+        NetworkManager.Singleton.OnClientConnectedCallback += Singleton_OnClientConnectedCallback;
+        NetworkManager.Singleton.OnServerStopped += Singleton_OnServerStopped;
 
         playerControls = new PlayerInPutActions();
         input = GetComponent<PlayerInput>();
@@ -83,6 +105,9 @@ public class Network_Player_Controller : NetworkBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         Cursor.visible = false;
+
+        m_HealItemCanvas.SetActive(true);
+        m_PlayerUICanvas.SetActive(true);
         //PlayFabStats.Instance.GetStatistics();
 
         //if (PlayFabStats.Instance.JustStarted == 0)
@@ -97,6 +122,29 @@ public class Network_Player_Controller : NetworkBehaviour
         //}
 
         base.OnNetworkSpawn();
+    }
+
+    private void Singleton_OnServerStopped(bool obj)
+    {
+        SceneManager.LoadScene("Level1");
+
+        //throw new System.NotImplementedException();
+    }
+
+    private void Singleton_OnClientConnectedCallback(ulong obj)
+    {
+        Debug.Log(NetworkObjectId);
+
+        //throw new System.NotImplementedException();
+    }
+
+    private void Singleton_OnClientDisconnectCallback(ulong obj)
+    {
+        if(IsHost) return;
+
+        SceneManager.LoadScene("Level1");
+
+        //throw new System.NotImplementedException();
     }
 
     private void Start()
@@ -115,16 +163,45 @@ public class Network_Player_Controller : NetworkBehaviour
      }
     */
 
+
     public void UnlockMouse(InputAction.CallbackContext context)
     {
         if (!IsOwner) return;
         if (context.performed)
         {
-            Cursor.lockState = CursorLockMode.Confined;
-            input.SwitchCurrentActionMap("UI");
-            UIManager.instance.PauseMenu();
-        }
+            if (m_playStateSwapped == 1)
+            {
+                m_playStateSwapped = 0;
+                return;
+            }
+            else
+            {
+                m_playStateSwapped = 1;
+            }
+            if (m_playState == PlayerState.Unpaused)
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+                Cursor.visible = true;
+                input.SwitchCurrentActionMap("UI");
+                m_cinemachine_cam.SetActive(false);
+                Multiplayer_UI_Manager.instance.PausePlayer();
+                m_playState = PlayerState.Paused;
+                m_HealItemCanvas.SetActive(false);
+                m_PlayerUICanvas.SetActive(false);
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                input.SwitchCurrentActionMap("Player");
+                m_cinemachine_cam.SetActive(true);
+                Multiplayer_UI_Manager.instance.ExitCanvas();
+                m_playState = PlayerState.Unpaused;
+                m_HealItemCanvas.SetActive(true);
+                m_PlayerUICanvas.SetActive(false);
+            }
 
+        }
     }
 
     public void LockMouse(InputAction.CallbackContext context)
@@ -179,7 +256,13 @@ public class Network_Player_Controller : NetworkBehaviour
 
         if (input.currentActionMap.name != "DialogueBox" && (!isRolling && !isBlocking))
         {
+            if (m_playState == PlayerState.Paused)
+            {
+                moveDirection = Vector3.zero;
+                return;
+            }
             moveDirection = move.ReadValue<Vector3>();
+            if (!IsHost) return;
             moveDirection.Normalize();
             //if (/*!getBlockState()*/!performingAction() && moveDirection != Vector3.zero)
             /*{
@@ -226,10 +309,10 @@ public class Network_Player_Controller : NetworkBehaviour
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnVelocitySmooth, turnSmoothTime);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
             Vector3 moveDirectionUpdated = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-            if (IsClient)
+            if (!IsHost)
             {
-                NetworkVectorData data = new NetworkVectorData(moveDirectionUpdated.x, moveDirectionUpdated.y, moveDirectionUpdated.z);
-                SetPositionServerRpc(data);
+                NetworkVectorData data = new NetworkVectorData(moveDirectionUpdated.x, moveDirectionUpdated.y, moveDirectionUpdated.z, angle);
+                SetPositionServerRpc(data, OwnerClientId);
                 return;
             }
             controller.Move(moveDirectionUpdated.normalized * moveSpeed * Time.deltaTime);
@@ -248,23 +331,15 @@ public class Network_Player_Controller : NetworkBehaviour
     }
 
     [ServerRpc]
-    public void SetCamerasServerRpc()
+    public void SetPositionServerRpc(NetworkVectorData _data, ulong playerID)
     {
-        
+        if (OwnerClientId != playerID) return;
 
-        Debug.Log(cam);
-
-        //GetCamerasClientRpc();
-    }
-
-    [ServerRpc]
-    public void SetPositionServerRpc(NetworkVectorData _data)
-    {
         Vector3 newMoveVector = new Vector3(_data._x, _data._y, _data._z);
         if (/*!getBlockState()*/!performingAction() && newMoveVector != Vector3.zero)
         {
+            transform.rotation = Quaternion.Euler(0f, _data._angle, 0f);
 
-            
             controller.Move(newMoveVector.normalized * moveSpeed * Time.deltaTime);
         }
         else
@@ -282,13 +357,38 @@ public class Network_Player_Controller : NetworkBehaviour
 
     }
 
+    public void UnpauseFromUI()
+    {
+        m_playStateSwapped = 0;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        input.SwitchCurrentActionMap("Player");
+        m_cinemachine_cam.SetActive(true);
+        //Multiplayer_UI_Manager.instance.ExitCanvas();
+        m_playState = PlayerState.Unpaused;
+        m_HealItemCanvas.SetActive(true);
+        m_PlayerUICanvas.SetActive(true);
+    }
 
+    public void QuitMulti()
+    {
+        if (!IsOwner) return;
 
-    //[ClientRpc]
-    //public void GetCamerasClientRpc()
-    //{
-        //input.camera = Camera.main;
+        if (IsHost)
+        {
+            NetworkManager.Singleton.Shutdown();
+            //DisconnectFromLobbyClientRpc();
+        }
+        else
+        {
+            DisconnectFromLobbyServerRpc(OwnerClientId);
+        }
+    }
 
-        //cam = input.camera.transform;
-   // }
+    [ServerRpc]
+    public void DisconnectFromLobbyServerRpc(ulong _id)
+    {
+        NetworkManager.DisconnectClient(_id);
+        //SceneManager.LoadScene("Level1");
+    }
 }

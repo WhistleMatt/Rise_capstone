@@ -34,11 +34,39 @@ public class Network_Input_Controller : NetworkBehaviour
     private InputAction parry;
     private InputAction roll;
 
-    private PlayerInput m_inputs;
+    [SerializeField] private PlayerInput m_inputs;
 
     private PlayerStatsController m_statsController;
-    private void OnEnable()
+
+
+    public struct InputControllerNetworkInputs : INetworkSerializable
     {
+
+        public string _currentInput;
+        public string _previousInput;
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref _currentInput);
+            serializer.SerializeValue(ref _previousInput);
+        }
+
+        public InputControllerNetworkInputs(string _current = "Idle", string _previous = "Idle")
+        {
+            _currentInput = _current;
+            _previousInput = _previous;
+        }
+    }
+
+
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner) return;
+
+        playerControls = new PlayerInPutActions();
+        //m_inputs = GetComponent<PlayerInput>();
+        m_statsController = GetComponent<PlayerStatsController>();
+
         lAttck = playerControls.Player.LightAttack;
         lAttck.Enable();
         lAttck.performed += LightAttack;
@@ -62,58 +90,64 @@ public class Network_Input_Controller : NetworkBehaviour
         roll = playerControls.Player.Roll;
         roll.Enable();
         roll.performed += Roll;
+
+        base.OnNetworkSpawn();
     }
-    private void OnDisable()
-    {
-        lAttck.Disable();
-        hAttck.Disable();
-        block.Disable();
-        blockRelease.Disable();
-        parry.Disable();
-    }
-    private void Awake()
-    {
-        playerControls = new PlayerInPutActions();
-        m_inputs = GetComponent<PlayerInput>();
-        m_statsController = GetComponent<PlayerStatsController>();
-    }
+
     private void LightAttack(InputAction.CallbackContext context)
     {
         if (!IsOwner) return;
-        addInput("Light");
+        if (context.performed)
+        { 
+            addInput("Light", this.OwnerClientId); 
+        }
     }
     private void HeavyAttack(InputAction.CallbackContext context)
     {
         if (!IsOwner) return;
-        addInput("Heavy");
+        if (context.performed)
+        {
+            addInput("Heavy", this.OwnerClientId);
+        }
 
     }
 
     private void Block(InputAction.CallbackContext context)
     {
         if (!IsOwner) return;
-        addInput("Block");
-        isBlocking = true;
+        if (context.performed)
+        {
+            addInput("Block", this.OwnerClientId);
+            isBlocking = true;
+        }
 
     }
     private void BlockRelease(InputAction.CallbackContext context)
     {
         if (!IsOwner) return;
-        isBlocking = false;
-        addInput("BlockRelease");
-
+        if (context.performed)
+        {
+            isBlocking = false;
+            addInput("BlockRelease", this.OwnerClientId);
+        }
     }
 
     private void Parry(InputAction.CallbackContext context)
     {
         if (!IsOwner) return;
-        addInput("Parry");
+        if (context.performed)
+        {
+            addInput("Parry", this.OwnerClientId);
+        }
     }
 
     private void Roll(InputAction.CallbackContext context)
     {
         if (!IsOwner) return;
-        addInput("Roll");
+        if (context.performed)
+        {
+            addInput("Roll", this.OwnerClientId);
+        }
     }
 
     private int GetStaminaCost(string _name)
@@ -148,7 +182,9 @@ public class Network_Input_Controller : NetworkBehaviour
                 m_statsController.setPStamina(staminaAmount - staminacost);
                 timer = 0;
 
-                setAnimState(input);
+                //InputControllerNetworkInputs inputStruct = new InputControllerNetworkInputs(input, prevIn);
+
+                setAnimState(input, this.OwnerClientId);
             }
         }
 
@@ -160,9 +196,15 @@ public class Network_Input_Controller : NetworkBehaviour
         lightCount = 0;
         heavyCount = 0;
     }
-    private void setAnimState(string input)
+
+    //[ServerRpc]
+    private void setAnimState(string input, ulong _playerID)
     {
+
+        //if (OwnerClientId != _playerID) return;
+
         if (!IsOwner) return;
+
         Debug.Log("prev input: " + prevIn + "pre prev input: " + prevPrevIn);
 
         if (input == "Block")
@@ -280,9 +322,11 @@ public class Network_Input_Controller : NetworkBehaviour
         prevPrevIn = prevIn;
         prevIn = Input;
     }
-    private void addInput(string input)
+
+    private void addInput(string input, ulong _playerID)
     {
         if (!IsOwner) return;
+        //if (OwnerClientId != _playerID) return;
         if (m_inputs.currentActionMap.name != "Player")
         {
             return;
@@ -330,4 +374,12 @@ public class Network_Input_Controller : NetworkBehaviour
         }
 
     }
+
+    [ServerRpc]
+    private void UpdateAnimationServerRpc(string _animName, ulong _playerID)
+    {
+
+        this.GetComponent<Animator>().SetTrigger("roll");
+    }
+
 }
