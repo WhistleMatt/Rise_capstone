@@ -8,11 +8,26 @@ public class idleReset : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.SetBool("performingAction", false);
-        animator.gameObject.GetComponent<InputController>().updatePrevInput("Idle");
-        animator.gameObject.GetComponent<InputController>().RestInputCount();
-        animator.gameObject./*transform.root.*/GetComponent<HitBoxController>().HitBoxDisable(0);
-        animator.gameObject./*transform.root.*/GetComponent<HitBoxController>().HurtBoxEnable();
-        
+        InputController inputController = animator.gameObject.GetComponent<InputController>();
+        if (inputController != null)
+        {
+            inputController.updatePrevInput("Idle");
+            inputController.RestInputCount();
+            animator.gameObject./*transform.root.*/GetComponent<HitBoxController>().HitBoxDisable(0);
+            animator.gameObject./*transform.root.*/GetComponent<HitBoxController>().HurtBoxEnable();
+            return;
+        }
+        Network_Input_Controller network_input_controller = animator.gameObject.GetComponent<Network_Input_Controller>();
+        if (network_input_controller != null)
+        {
+            network_input_controller.updatePrevInput("Idle");
+            network_input_controller.RestInputCount();
+            animator.gameObject./*transform.root.*/GetComponent<HitBoxController>().HitBoxDisable(0);
+            animator.gameObject./*transform.root.*/GetComponent<HitBoxController>().HurtBoxEnable();
+        }
+
+
+
 
     }
 

@@ -27,6 +27,7 @@ public class PlayerController : MonoInputController
     
     private PlayerState m_playState = PlayerState.Unpaused;
     private int m_playStateSwapped = 0;
+    [SerializeField] private GameObject m_HealItemCanvas;
     //ublic float mass;
 
     private InputAction move;
@@ -114,6 +115,7 @@ public class PlayerController : MonoInputController
                 input.SwitchCurrentActionMap("UI");
                 UIManager.instance.PauseMenu();
                 m_playState = PlayerState.Paused;
+                m_HealItemCanvas.SetActive(false);
             }
             else
             {
@@ -121,6 +123,7 @@ public class PlayerController : MonoInputController
                 input.SwitchCurrentActionMap("Player");
                 UIManager.instance.Unpause();
                 m_playState = PlayerState.Unpaused;
+                m_HealItemCanvas.SetActive(true);
             }
         }
     }

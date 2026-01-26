@@ -37,7 +37,7 @@
                     "name": "HeavyAttack",
                     "type": "Button",
                     "id": "434f05d6-0648-4335-baf5-26d2c8c774d3",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -110,6 +110,15 @@
                     "type": "Button",
                     "id": "67a5c8ee-378a-4c97-80de-c475f98c5ac4",
                     "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Use_Item",
+                    "type": "Button",
+                    "id": "6ae967df-fdea-45e0-9393-026fcaa852ec",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -322,6 +331,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "OpenPauseMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c6d077ed-ed98-4397-8af9-9ddd572f1baf",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Use_Item",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

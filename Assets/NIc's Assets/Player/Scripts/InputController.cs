@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-//Nicolas Chatziargriou
+//written by Nicolas Chatziargriou
+//extended by Matthew Whistle
 public class InputController : MonoBehaviour
 {
 
@@ -80,36 +81,53 @@ public class InputController : MonoBehaviour
     }
     private void LightAttack(InputAction.CallbackContext context)
     {
-        addInput("Light");
+        if (context.performed)
+        {
+            addInput("Light");
+        }
     }
     private void HeavyAttack(InputAction.CallbackContext context)
     {
-        addInput("Heavy");
+        if (context.performed)
+        {
+            addInput("Heavy");
+        }
        
     }
    
     private void Block(InputAction.CallbackContext context)
     {
-        addInput("Block");
-        isBlocking = true;
+        if (context.performed)
+        {
+            addInput("Block");
+            isBlocking = true;
+        }
      
     }
     private void BlockRelease(InputAction.CallbackContext context)
     {
-        isBlocking = false;
-        addInput("BlockRelease");
+        if (context.performed)
+        {
+            isBlocking = false;
+            addInput("BlockRelease");
+        }
         
     }
 
     private void Parry(InputAction.CallbackContext context)
     {
-        
-        addInput("Parry");
+        if (context.performed)
+        {
+            addInput("Parry");
+        }
     }
 
     private void Roll(InputAction.CallbackContext context)
     {
-        addInput("Roll");
+        if (context.performed)
+        {
+            addInput("Roll");
+        }
     }
 
     private int GetStaminaCost(string _name)

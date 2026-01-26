@@ -123,7 +123,7 @@ public partial class @PlayerInPutActions: IInputActionCollection2, IDisposable
                     ""name"": ""HeavyAttack"",
                     ""type"": ""Button"",
                     ""id"": ""434f05d6-0648-4335-baf5-26d2c8c774d3"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -196,6 +196,15 @@ public partial class @PlayerInPutActions: IInputActionCollection2, IDisposable
                     ""type"": ""Button"",
                     ""id"": ""67a5c8ee-378a-4c97-80de-c475f98c5ac4"",
                     ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Use_Item"",
+                    ""type"": ""Button"",
+                    ""id"": ""6ae967df-fdea-45e0-9393-026fcaa852ec"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -408,6 +417,17 @@ public partial class @PlayerInPutActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""OpenPauseMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c6d077ed-ed98-4397-8af9-9ddd572f1baf"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Use_Item"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1063,6 +1083,7 @@ public partial class @PlayerInPutActions: IInputActionCollection2, IDisposable
         m_Player_Roll = m_Player.FindAction("Roll", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_OpenPauseMenu = m_Player.FindAction("OpenPauseMenu", throwIfNotFound: true);
+        m_Player_Use_Item = m_Player.FindAction("Use_Item", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1176,6 +1197,7 @@ public partial class @PlayerInPutActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Roll;
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_OpenPauseMenu;
+    private readonly InputAction m_Player_Use_Item;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1235,6 +1257,10 @@ public partial class @PlayerInPutActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/OpenPauseMenu".
         /// </summary>
         public InputAction @OpenPauseMenu => m_Wrapper.m_Player_OpenPauseMenu;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Use_Item".
+        /// </summary>
+        public InputAction @Use_Item => m_Wrapper.m_Player_Use_Item;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1297,6 +1323,9 @@ public partial class @PlayerInPutActions: IInputActionCollection2, IDisposable
             @OpenPauseMenu.started += instance.OnOpenPauseMenu;
             @OpenPauseMenu.performed += instance.OnOpenPauseMenu;
             @OpenPauseMenu.canceled += instance.OnOpenPauseMenu;
+            @Use_Item.started += instance.OnUse_Item;
+            @Use_Item.performed += instance.OnUse_Item;
+            @Use_Item.canceled += instance.OnUse_Item;
         }
 
         /// <summary>
@@ -1344,6 +1373,9 @@ public partial class @PlayerInPutActions: IInputActionCollection2, IDisposable
             @OpenPauseMenu.started -= instance.OnOpenPauseMenu;
             @OpenPauseMenu.performed -= instance.OnOpenPauseMenu;
             @OpenPauseMenu.canceled -= instance.OnOpenPauseMenu;
+            @Use_Item.started -= instance.OnUse_Item;
+            @Use_Item.performed -= instance.OnUse_Item;
+            @Use_Item.canceled -= instance.OnUse_Item;
         }
 
         /// <summary>
@@ -1920,6 +1952,13 @@ public partial class @PlayerInPutActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnOpenPauseMenu(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Use_Item" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnUse_Item(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
