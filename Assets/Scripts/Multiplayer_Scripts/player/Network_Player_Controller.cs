@@ -1,5 +1,7 @@
 using Unity.Netcode;
 using Unity.Networking;
+using Unity.Services.Lobbies;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
@@ -112,13 +114,13 @@ public class Network_Player_Controller : NetworkBehaviour
 
         //if (PlayFabStats.Instance.JustStarted == 0)
         //{
-            //transform.position = new Vector3 (6f, 0.125f, 0f);
-            //PlayFabStats.Instance.UpdateStats((int)playerStatsController.getPHealthMax(), (int)playerStatsController.getPHealth(), (int)gameObject.transform.position.x, (int)gameObject.transform.position.y, (int)gameObject.transform.position.z, 1, (int)playerStatsController.getManaMax(), (int)playerStatsController.getPMana(), (int)playerStatsController.getStaminahMax(), (int)playerStatsController.getPStamina(), (int)playerStatsController.getAttckMax(), (int)playerStatsController.getPAttck(), (int)playerStatsController.getPDefenseMax(), (int)playerStatsController.getPDefense(), (int)playerStatsController.getExperiancePoints());
+        //transform.position = new Vector3 (6f, 0.125f, 0f);
+        //PlayFabStats.Instance.UpdateStats((int)playerStatsController.getPHealthMax(), (int)playerStatsController.getPHealth(), (int)gameObject.transform.position.x, (int)gameObject.transform.position.y, (int)gameObject.transform.position.z, 1, (int)playerStatsController.getManaMax(), (int)playerStatsController.getPMana(), (int)playerStatsController.getStaminahMax(), (int)playerStatsController.getPStamina(), (int)playerStatsController.getAttckMax(), (int)playerStatsController.getPAttck(), (int)playerStatsController.getPDefenseMax(), (int)playerStatsController.getPDefense(), (int)playerStatsController.getExperiancePoints());
         //}
 
         //if (transform.position != PlayFabStats.Instance.GetAsVector())
         //{
-            //hasSpawned = false;
+        //hasSpawned = false;
         //}
 
         base.OnNetworkSpawn();
@@ -130,6 +132,8 @@ public class Network_Player_Controller : NetworkBehaviour
 
         //throw new System.NotImplementedException();
     }
+
+
 
     private void Singleton_OnClientConnectedCallback(ulong obj)
     {
@@ -214,6 +218,13 @@ public class Network_Player_Controller : NetworkBehaviour
             UIManager.instance.Unpause();
         }
 
+    }
+
+    public void EnableBossUI()
+    {
+        if (!IsOwner) return;
+
+        m_PlayerUICanvas.GetComponentInChildren<WizrdBossHealthBarController>().enabled = true;
     }
 
     private bool performingAction()
@@ -370,12 +381,13 @@ public class Network_Player_Controller : NetworkBehaviour
         m_PlayerUICanvas.SetActive(true);
     }
 
-    public void QuitMulti()
+    public async void QuitMulti()
     {
         if (!IsOwner) return;
 
         if (IsHost)
         {
+            await Multiplayer_lobby_manager.Instance.CloseLobby();
             NetworkManager.Singleton.Shutdown();
             //DisconnectFromLobbyClientRpc();
         }

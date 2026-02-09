@@ -26,7 +26,7 @@ public class Multiplayer_Door_Levers : NetworkBehaviour
         {
             if (!m_LeverMoved.Value)
             {
-                RotateLeverServerRpc();
+                RotateLever();
             }
         }
     }
@@ -40,8 +40,8 @@ public class Multiplayer_Door_Levers : NetworkBehaviour
 
     }
 
-    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-    public void RotateLeverServerRpc()
+    //[Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void RotateLever()
     {
         this.transform.rotation = Quaternion.Slerp(transform.rotation, _OnPos.rotation, _Speed * Time.deltaTime);
         if (this.transform.rotation == _OnPos.rotation)
