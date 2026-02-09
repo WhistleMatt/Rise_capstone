@@ -7,6 +7,8 @@ public class disableOnStart : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        var networkStatCont = GetComponent<Multiplayer_WizardController>();
+        if (networkStatCont != null) return;
         this.gameObject.SetActive(false);
     }
 

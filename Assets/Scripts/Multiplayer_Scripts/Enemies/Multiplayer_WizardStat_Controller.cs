@@ -1,15 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class WizrdBossStatsController : MonoBehaviour
+public class Multiplayer_WizardStat_Controller : MonoBehaviour
 {
-    [SerializeField] private float _pHealth;
-    [SerializeField] private float _pHealthMax;
-    [SerializeField] private float _pAttck;
-    [SerializeField] private float _pAttckMax;
-    [SerializeField] private float _pDefense;
-    [SerializeField] private float _pDefenseMax;
+    [SerializeField] NetworkVariable<float> _pHealth = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    [SerializeField] NetworkVariable<float> _pHealthMax = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    [SerializeField] NetworkVariable<float> _pAttck = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    [SerializeField] NetworkVariable<float> _pAttckMax = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    [SerializeField] NetworkVariable<float> _pDefense = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    [SerializeField] NetworkVariable<float> _pDefenseMax = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     [SerializeField] private float _experiancePoints;
     [SerializeField] private GameObject _pushBox;
     [SerializeField] private GameObject _knightStatue;
@@ -33,82 +32,80 @@ public class WizrdBossStatsController : MonoBehaviour
     }
     public float getPHealth()
     {
-        return _pHealth;
+        return _pHealth.Value;
     }
 
     public void setPHealth(float health)
     {
-        if (health > _pHealthMax)
+        TakeDamageServerRpc(health);
+    }
+
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    private void TakeDamageServerRpc(float health)
+    {
+        if (health > _pHealthMax.Value)
         {
-            _pHealth = _pHealthMax;
+            _pHealth.Value = _pHealthMax.Value;
             return;
         }
-        _pHealth = health;
-
+        _pHealth.Value = health;
     }
 
     public float getPHealthMax()
     {
-        Debug.Log("UPDATE");
-        return _pHealthMax;
+        return _pHealthMax.Value;
     }
 
     public void setPHealthMax(float health)
     {
-        _pHealthMax = health;
+        _pHealthMax.Value = health;
     }
 
     public bool IsDead() { return m_isDead; }
 
-    public void SetDead(bool _isDead) { m_isDead = _isDead; }
-
-   
-
-
-
     public float getPAttck()
     {
-        return _pAttck;
+        return _pAttck.Value;
     }
 
     public void setPAttck(float attack)
     {
-        _pAttck = attack;
+        _pAttck.Value = attack;
     }
 
     public float getAttckMax()
     {
-        return _pAttckMax;
+        return _pAttckMax.Value;
     }
 
     public void setPAttckMax(float attack)
     {
-        _pAttckMax = attack;
+        _pAttckMax.Value = attack;
     }
 
     public float getPDefense()
     {
-        return _pDefense;
+        return _pDefense.Value;
     }
 
     public void setPDefense(float defense)
     {
-        _pDefense = defense;
+        _pDefense.Value = defense;
     }
 
     public float getPDefenseMax()
     {
-        return _pDefenseMax;
+        return _pDefenseMax.Value;
     }
 
     public void setPDefenseMax(float defense)
     {
-        _pDefenseMax = defense;
+        _pDefenseMax.Value = defense;
     }
     private void Awake()
     {
-      
-       
+
+
     }
 
     private void Update()
@@ -116,8 +113,8 @@ public class WizrdBossStatsController : MonoBehaviour
 
         if (getPHealth() <= 0)
         {
-          //  this.gameObject.GetComponent<Animator>().SetTrigger("isDead");
-          
+            //  this.gameObject.GetComponent<Animator>().SetTrigger("isDead");
+
             _pushBox.gameObject.SetActive(false);
             _knightStatue.SetActive(true);
             m_isDead = true;
@@ -133,6 +130,6 @@ public class WizrdBossStatsController : MonoBehaviour
                 gaveXP = true;
             }
         }
-       
+
     }
 }
