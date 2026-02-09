@@ -34,7 +34,7 @@ public class EnemyWander : FSMC_Behaviour
     public override void OnStateUpdate(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
         m_players = GameObject.FindObjectsByType<Network_Player_Controller>(FindObjectsSortMode.InstanceID);
-        Debug.Log(m_players.Length);
+        //Debug.Log(m_players.Length);
         if (m_players.Length <= 1)
         {
             var playerObject = GameObject.FindGameObjectWithTag("Player");

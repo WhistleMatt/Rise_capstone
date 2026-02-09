@@ -766,6 +766,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5145230612751347514, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5509554827753622507, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -773,6 +777,10 @@ PrefabInstance:
     - target: {fileID: 5961354099682041848, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6676981787615218679, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7110500682090164369, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
       propertyPath: m_Center.y
@@ -932,7 +940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 571435037
+  GlobalObjectIdHash: 2160097307
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1

@@ -83,7 +83,10 @@ public class EnemyChase : FSMC_Behaviour
                     m_player_to_chase = player;
                     stateMachine.SetBool("Chase", false);
                     stateMachine.SetBool("Attack", true);
-
+                }
+                else if (Vector3.Distance(executer.gameObject.transform.position, player.gameObject.transform.position) <= 20)
+                {
+                    m_player_to_chase = player;
                 }
             }
 
