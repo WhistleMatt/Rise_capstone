@@ -2130,6 +2130,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: NetworkManager
       objectReference: {fileID: 0}
+    - target: {fileID: 4323277669884862111, guid: 6102bf4e6dabf264bb1898298e7ed582, type: 3}
+      propertyPath: m_ProtocolType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4323277669884862111, guid: 6102bf4e6dabf264bb1898298e7ed582, type: 3}
+      propertyPath: m_UseWebSockets
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4323277669884862111, guid: 6102bf4e6dabf264bb1898298e7ed582, type: 3}
+      propertyPath: ConnectionData.Address
+      value: 192.168.0.15
+      objectReference: {fileID: 0}
     - target: {fileID: 5527156175057927310, guid: 6102bf4e6dabf264bb1898298e7ed582, type: 3}
       propertyPath: m_LocalPosition.x
       value: 120.14457

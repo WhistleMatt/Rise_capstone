@@ -19516,7 +19516,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7851965134186595487, guid: 418016126b6a01848848bade78095d35, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.92387956
+      value: 0.9238795
       objectReference: {fileID: 0}
     - target: {fileID: 7851965134186595487, guid: 418016126b6a01848848bade78095d35, type: 3}
       propertyPath: m_LocalRotation.y
@@ -19524,7 +19524,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7851965134186595487, guid: 418016126b6a01848848bade78095d35, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -1.1066965e-16
+      value: -1.1066967e-16
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -19958,6 +19958,10 @@ PrefabInstance:
     - target: {fileID: 49819810286514485, guid: e2fb9a995d35eb3488fd09f0b1f5d222, type: 3}
       propertyPath: m_Name
       value: LobbyCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 49819810286514485, guid: e2fb9a995d35eb3488fd09f0b1f5d222, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8656790784220345257, guid: e2fb9a995d35eb3488fd09f0b1f5d222, type: 3}
       propertyPath: m_Pivot.x
