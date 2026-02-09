@@ -63,6 +63,7 @@ public void clearEnemyCache()
         resetEnemies();
         resetPlayerHealth();
         var player = GameObject.FindGameObjectWithTag("Player").gameObject;
+        player.GetComponent<Potion_Singleplayer_Script>().ResetHeals();
         var playerStats = GameObject.FindGameObjectWithTag("Player").gameObject.GetComponent<PlayerStatsController>();
         PlayFabStats.Instance.UpdateStats((int)playerStats.getPHealthMax(), (int)playerStats.getPHealth(), (int)player.transform.position.x, (int)player.transform.position.y,
             (int)player.transform.position.z, 1, (int)playerStats.getManaMax(), (int)playerStats.getPMana(), (int)playerStats.getStaminahMax(), (int)playerStats.getPStamina(), 
