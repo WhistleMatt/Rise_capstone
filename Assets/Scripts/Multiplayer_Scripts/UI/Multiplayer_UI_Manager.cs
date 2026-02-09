@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
+using TMPro;
 
 public class Multiplayer_UI_Manager : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class Multiplayer_UI_Manager : MonoBehaviour
     [SerializeField] GameObject m_basePauseCanvas;
     [SerializeField] GameObject m_QuitUICanvas;
     [SerializeField] GameObject m_ConfirmQuitUICanvas;
+    [SerializeField] TextMeshProUGUI m_hostText;
+    private string HostID;
 
     public static Multiplayer_UI_Manager instance;
 
@@ -21,6 +24,11 @@ public class Multiplayer_UI_Manager : MonoBehaviour
     void Start()
     {
 
+    }
+
+    public void SetHostID(string _id)
+    {
+        HostID = _id;
     }
 
     // Update is called once per frame
@@ -45,6 +53,7 @@ public class Multiplayer_UI_Manager : MonoBehaviour
 
         //m_playerUICanvas.SetActive(false);
         m_basePauseCanvas.SetActive(true);
+        m_hostText.text = HostID;
         m_QuitUICanvas.SetActive(true);
         m_ConfirmQuitUICanvas.SetActive(false);
     }
