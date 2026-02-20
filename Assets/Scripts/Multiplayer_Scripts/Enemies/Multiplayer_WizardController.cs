@@ -9,14 +9,16 @@ public class Multiplayer_WizardController : NetworkBehaviour
     [SerializeField] private GameObject _ammo;
 
     private NetworkVariable<int> _spawnLocationVar = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone);
+    [SerializeField] private NetworkVariable<float> _TeleportTimer = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone);
+    [SerializeField] private NetworkVariable<float> _ShrinkTimer = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone);
     private NetworkVariable<bool> _alteredSpawn = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone);
     private bool networkstarted = false;
 
     [SerializeField] private float _teleportTime; //time to teleport after shooting Fireballs
     [SerializeField] private float _teleportTimer;
     [SerializeField] private float _shrinkRatio;
-    private float _shrinkTime;
-    private float _shrinkTimer = 0;
+    [SerializeField] private float _shrinkTime;
+    [SerializeField] private float _shrinkTimer = 0;
     // Start is called before the first frame update
 
 
@@ -34,6 +36,22 @@ public class Multiplayer_WizardController : NetworkBehaviour
         if (!networkstarted) return;
         //this.transform.LookAt(GameObject.FindGameObjectWithTag("Player").transform.position);
         _teleportTimer = _teleportTimer + Time.deltaTime;
+        /*
+        var ourObjects = GameObject.FindObjectsByType<Network_Player_Controller>(FindObjectsSortMode.None);
+        foreach (Network_Player_Controller controller in ourObjects)
+        {
+            if (controller.AreWeOwner())
+            {
+                if (controller.IsOwnedByServer)
+                {
+                    UpdateTeleportTimerRpc(_teleportTimer);
+                }
+            }
+        }
+ 
+        _teleportTimer = _TeleportTimer.Value;
+        */
+
         if (_teleportTimer >= _teleportTime)
         {
             Teleport();
@@ -44,8 +62,6 @@ public class Multiplayer_WizardController : NetworkBehaviour
     {
         _shrinkTime = this.gameObject.GetComponent<AudioSource>().clip.length;
 
-
-
         this.gameObject.transform.localScale = new Vector3(0.5f - _shrinkTimer * _shrinkRatio, 0.5f - _shrinkTimer * _shrinkRatio, 0.5f - _shrinkTimer * _shrinkRatio);
         if (this.gameObject.transform.localScale.x < 0)
         {
@@ -53,6 +69,18 @@ public class Multiplayer_WizardController : NetworkBehaviour
         }
         //this.gameObject.transform.localScale = new Vector3(1,1,1);
         _shrinkTimer = _shrinkTimer + Time.deltaTime;
+        var ourObjects = GameObject.FindObjectsByType<Network_Player_Controller>(FindObjectsSortMode.None);
+        foreach (Network_Player_Controller controller in ourObjects)
+        {
+            if (controller.AreWeOwner())
+            {
+                if (controller.IsOwnedByServer)
+                {
+                    UpdateShrinkTimerRpc(_shrinkTimer);
+                }
+            }
+        }
+        //_shrinkTimer = _ShrinkTimer.Value;
 
     }
     private void shootFireball()
@@ -64,18 +92,31 @@ public class Multiplayer_WizardController : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Owner)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    private void UpdateShrinkTimerRpc(float timer)
+    {
+        _ShrinkTimer.Value = timer;
+    }
+
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    private void UpdateTeleportTimerRpc(float timer)
+    {
+        _TeleportTimer.Value = timer;
+    }
+
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     private void ChooseTeleSpotRpc(int _number)
     {
             _spawnLocationVar.Value = _number;
     }
 
     private void Teleport()
-    { 
+    {
         this.gameObject.GetComponent<AudioSource>().Play();
         shrink();
         if (_shrinkTimer >= _shrinkTime)
         {
+            bool serverOwned = false;
             int ranVal = Random.Range(0, _spawns.Count);
             var ourObjects = GameObject.FindObjectsByType<Network_Player_Controller>(FindObjectsSortMode.None);
             foreach (Network_Player_Controller controller in ourObjects)
@@ -84,6 +125,7 @@ public class Multiplayer_WizardController : NetworkBehaviour
                 {
                     if (controller.IsOwnedByServer)
                     {
+                        serverOwned = true;
                         ChooseTeleSpotRpc(ranVal);
                     }
                     else
@@ -100,6 +142,11 @@ public class Multiplayer_WizardController : NetworkBehaviour
             this.transform.position = _spawns[_spawnLocationVar.Value].gameObject.transform.position;
             this.gameObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
             this.transform.LookAt(GameObject.FindGameObjectWithTag("Player").transform.position);
+            if (serverOwned)
+            {
+                UpdateTeleportTimerRpc(0f);
+                UpdateShrinkTimerRpc(0f);
+            }
             _teleportTimer = 0;
             _shrinkTimer = 0;
             shootFireball();

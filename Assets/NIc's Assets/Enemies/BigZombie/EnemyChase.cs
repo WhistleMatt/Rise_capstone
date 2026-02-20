@@ -74,8 +74,69 @@ public class EnemyChase : FSMC_Behaviour
                 stateMachine.SetBool("Dead", true);
             }
 
+            //Network_Player_Controller[] m_players = GameObject.FindObjectsByType<Network_Player_Controller>(FindObjectsSortMode.InstanceID);
+
             Network_Player_Controller[] m_players = GameObject.FindObjectsByType<Network_Player_Controller>(FindObjectsSortMode.InstanceID);
 
+            //Debug.Log("there are " + m_players.Length + " players");
+
+            bool foundAppropPlayer = false;
+
+            float[] vectorList = new float[4];
+
+            int index = 0;
+
+            foreach (Network_Player_Controller player in m_players)
+            {
+                //Debug.Log($"Distance from {player.NetworkObjectId} is: " + Vector3.Distance(executer.gameObject.transform.position, player.gameObject.transform.position));
+
+                vectorList[index] = Vector3.Distance(executer.gameObject.transform.position, player.gameObject.transform.position);
+
+                index += 1;
+
+                //if (Vector3.Distance(executer.gameObject.transform.position, player.gameObject.transform.position) <= 2)
+                //{
+                //m_player_to_chase = player;
+                //foundAppropPlayer = true;
+                //break;
+                //}
+            }
+
+            float minDist = 10f;
+            int minDistIndex = 0;
+            for (int i = 0; i < m_players.Length; i++)
+            {
+                if (vectorList[i] < minDist)
+                {
+                    minDist = vectorList[i];
+                    minDistIndex = i;
+                }
+            }
+
+            if (minDist < 20 && chasing)
+            {
+                m_player_to_chase = m_players[minDistIndex];
+                foundAppropPlayer = true;
+            }
+            else
+            {
+                foundAppropPlayer = false;
+            }
+
+            if (!foundAppropPlayer)
+            {
+                m_player_to_chase = null;
+            }
+
+            if (m_player_to_chase != null)
+            {
+                if (minDist <= 2)
+                {
+                    stateMachine.SetBool("Chase", false);
+                    stateMachine.SetBool("Attack", true);
+                }
+            }
+            /*
             foreach (Network_Player_Controller player in m_players)
             {
                 if (Vector3.Distance(executer.gameObject.transform.position, player.gameObject.transform.position) <= 2)
@@ -89,6 +150,7 @@ public class EnemyChase : FSMC_Behaviour
                     m_player_to_chase = player;
                 }
             }
+            */
 
             if (Vector3.Distance(executer.gameObject.transform.position, executer.gameObject.GetComponent<EnemyPathController>().getCurrentDestination().transform.position) < 20 && chasing == true)
             {
