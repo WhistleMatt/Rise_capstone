@@ -758,9 +758,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2912794762748124007, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3621763188800803047, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
       propertyPath: _pHealth
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4621129668700800445, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4621129668700800445, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4621129668700800445, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4621129668700800445, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 37
+      objectReference: {fileID: 0}
+    - target: {fileID: 4621129668700800445, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -138
       objectReference: {fileID: 0}
     - target: {fileID: 4670530438837761029, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
       propertyPath: m_Enabled
@@ -776,7 +800,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5961354099682041848, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6676981787615218679, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
       propertyPath: m_IsActive
@@ -912,16 +936,13 @@ PrefabInstance:
       addedObject: {fileID: 8597353574647473874}
     - targetCorrespondingSourceObject: {fileID: 8486944572343442343, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1489629999949068121}
-    - targetCorrespondingSourceObject: {fileID: 8486944572343442343, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 3289118915810890403}
     - targetCorrespondingSourceObject: {fileID: 8486944572343442343, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3762226828684825376}
     - targetCorrespondingSourceObject: {fileID: 8486944572343442343, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2310699673669343319}
+      addedObject: {fileID: 6233125820538305084}
   m_SourcePrefab: {fileID: 100100000, guid: 0fc16fb24a1c9e2498c97a79ee68f808, type: 3}
 --- !u!1 &314372399060018651 stripped
 GameObject:
@@ -978,6 +999,9 @@ MonoBehaviour:
   isRolling: 0
   isBlocking: 0
   turnSmoothTime: 0
+  testBool:
+    m_InternalValue: 0
+  syncAnimator: {fileID: 0}
   m_HealItemCanvas: {fileID: 2531503406162436484}
   m_PlayerUICanvas: {fileID: 4645574403476814354}
 --- !u!114 &8597353574647473874
@@ -1004,7 +1028,7 @@ MonoBehaviour:
   RotationMaxInterpolationTime: 0.1
   ScaleLerpSmoothing: 1
   ScaleMaxInterpolationTime: 0.1
-  AuthorityMode: 0
+  AuthorityMode: 1
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
   SyncPositionX: 1
@@ -1026,98 +1050,6 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &1489629999949068121
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 314372399060018651}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
-  ShowTopMostFoldoutHeaderGroup: 1
-  TransitionStateInfoList:
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 2081823275
-    DestinationState: -961515511
-    TransitionDuration: 0.25
-    TriggerNameHash: 432426509
-    TransitionIndex: 3
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 2081823275
-    DestinationState: 1919144510
-    TransitionDuration: 0.25
-    TriggerNameHash: -1580255072
-    TransitionIndex: 4
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 2081823275
-    DestinationState: -123397769
-    TransitionDuration: 0.25
-    TriggerNameHash: 783626958
-    TransitionIndex: 5
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 765711723
-    DestinationState: -123397769
-    TransitionDuration: 0.25
-    TriggerNameHash: 783626958
-    TransitionIndex: 1
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: -961515511
-    DestinationState: 1605968307
-    TransitionDuration: 0.25
-    TriggerNameHash: 1918911130
-    TransitionIndex: 1
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 1605968307
-    DestinationState: 683544869
-    TransitionDuration: 0.25
-    TriggerNameHash: 1802723180
-    TransitionIndex: 0
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 1605968307
-    DestinationState: 1963857447
-    TransitionDuration: 0.25
-    TriggerNameHash: 537202199
-    TransitionIndex: 2
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 1919144510
-    DestinationState: -345341052
-    TransitionDuration: 0.25
-    TriggerNameHash: -899075017
-    TransitionIndex: 1
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 1919144510
-    DestinationState: 1896199277
-    TransitionDuration: 0.25
-    TriggerNameHash: 1918911130
-    TransitionIndex: 2
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: -345341052
-    DestinationState: -1670532334
-    TransitionDuration: 0.25
-    TriggerNameHash: -910364216
-    TransitionIndex: 0
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 1896199277
-    DestinationState: 34154161
-    TransitionDuration: 0.25
-    TriggerNameHash: -1938381663
-    TransitionIndex: 0
-  m_Animator: {fileID: 6482681456436274459}
 --- !u!114 &3289118915810890403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1155,7 +1087,17 @@ MonoBehaviour:
   heavyCount: 0
   inputs: []
   m_inputs: {fileID: 1140552447912223361}
---- !u!114 &2310699673669343319
+  m_animator: {fileID: 6482681456436274459}
+  m_animStates:
+    m_InternalValue:
+      attackData:
+        type: 0
+        attack_declared: 0
+        light_attack_count: 0
+        heavy_attack_count: 0
+      blocking: 0
+      rolling: 0
+--- !u!114 &6233125820538305084
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

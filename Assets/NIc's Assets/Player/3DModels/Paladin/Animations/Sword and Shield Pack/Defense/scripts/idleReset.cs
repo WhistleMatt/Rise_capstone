@@ -22,6 +22,7 @@ public class idleReset : StateMachineBehaviour
         {
             network_input_controller.updatePrevInput("Idle");
             network_input_controller.RestInputCount();
+            network_input_controller.ResetNetworkVar();
             animator.gameObject./*transform.root.*/GetComponent<HitBoxController>().HitBoxDisable(0);
             animator.gameObject./*transform.root.*/GetComponent<HitBoxController>().HurtBoxEnable();
         }
