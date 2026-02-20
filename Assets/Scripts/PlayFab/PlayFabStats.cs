@@ -7,10 +7,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI ;
 public class PlayFabStats : MonoBehaviour
 {
-    
-
-
-
     public int PlayerMaxHealth;
     public int PlayerHealth;
     public int PlayerPositionX;

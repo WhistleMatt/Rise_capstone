@@ -67,13 +67,15 @@ public class Multiplayer_Lobby_Panel : MonoBehaviour
         {
             Player = new Player()
             {
-
+                
                 Data = new Dictionary<string, PlayerDataObject>
                 {
                     {"PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, Username)}
                 },
             },
         };
+
+        GUIUtility.systemCopyBuffer = Username;
 
         if (HasPassword)
         {
@@ -91,7 +93,13 @@ public class Multiplayer_Lobby_Panel : MonoBehaviour
             }
         }
 
-        await Multiplayer_lobby_manager.Instance.JoinLobby(RepresentativeLobby, joinOptions);
+        var result = await Multiplayer_lobby_manager.Instance.JoinLobby(RepresentativeLobby, joinOptions);
+        if (result == false)
+        {
+            Debug.Log("Join Failed");
+            GameObject.Find("LobbyListUI").GetComponent<LobbyListIUI>().OpenWaitingUI(false);
+            return;
+        }
         Debug.Log("Joined!");
         GameObject.Find("LobbyListUI").GetComponent<LobbyListIUI>().OpenWaitingUI();
     }

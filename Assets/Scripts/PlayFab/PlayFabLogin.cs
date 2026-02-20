@@ -89,7 +89,7 @@ public class PlayFabLogin : MonoBehaviour
             error => Debug.LogError(error.GenerateErrorReport())
             );
         //GameObject.Find("TitleScreenUI").GetComponent<TitleScreenUIManager>().StartGame();
-        SceneManager.LoadScene("TutorialScene", LoadSceneMode.Single);
+
     }
 
     private void OnLoginFailure(PlayFabError _error)
@@ -122,9 +122,16 @@ public class PlayFabLogin : MonoBehaviour
         {
             switch (stat.StatisticName)
             {
-                case "Level":
+                case "JustStarted":
                     {
-                        SceneManager.LoadScene(stat.Value, LoadSceneMode.Single);
+                        if (stat.Value == 1)
+                        {
+                            SceneManager.LoadScene("Level1", LoadSceneMode.Single);
+                        }
+                        else
+                        {
+                            SceneManager.LoadScene("TutorialScene", LoadSceneMode.Single);
+                        }//SceneManager.LoadScene(stat.Value, LoadSceneMode.Single);
                         break;
                     }
                 default:

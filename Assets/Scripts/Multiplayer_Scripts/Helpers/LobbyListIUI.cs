@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
@@ -14,6 +15,7 @@ public class LobbyListIUI : MonoBehaviour
     [SerializeField] private GameObject m_selectScreen;
     [SerializeField] private Canvas m_parentCanvas;
     [SerializeField] private GameObject m_waitCanvas;
+    [SerializeField] private TextMeshProUGUI errorText;
 
     [SerializeField] private GameObject PasswordInputBox;
     [SerializeField] private GameObject RoomNameInputBox;
@@ -35,7 +37,7 @@ public class LobbyListIUI : MonoBehaviour
         m_refresh_BTN.onClick.AddListener(async () =>
         {
             //var Query = await Multiplayer_lobby_manager.Instance.ListLobbies();
-            RefreshLobbyList();
+            await RefreshLobbyList();
 
         });
 
@@ -47,12 +49,12 @@ public class LobbyListIUI : MonoBehaviour
         });
     }
 
-    private void OnEnable()
+    private async void OnEnable()
     {
-        CreateUI();
+        await CreateUI();
     }
 
-    public async void CreateUI()
+    public async Task<bool> CreateUI()
     {
         List<Lobby> _lobbyList = new List<Lobby>();
 
@@ -86,6 +88,7 @@ public class LobbyListIUI : MonoBehaviour
             newObject.GetComponent<Multiplayer_Lobby_Panel>().setPassword(RoomPassword);
             newObject.GetComponent<Multiplayer_Lobby_Panel>().SetHasPassword(PasswordInputBox.activeInHierarchy);
         }
+        return true;
     }
 
     public void OnSelectPrivate(bool _privacy)
@@ -128,7 +131,7 @@ public class LobbyListIUI : MonoBehaviour
         }
     }
 
-    private void RefreshLobbyList()
+    private async Task<bool> RefreshLobbyList()
     {
         List<GameObject> _currentChildren = new List<GameObject>();
         for (int i = 0; i < m_content.transform.childCount; i++)
@@ -141,11 +144,18 @@ public class LobbyListIUI : MonoBehaviour
             GameObject.Destroy(_currentChildren[i]);
         }
         _currentChildren.Clear();
-        CreateUI();
+        await CreateUI();
+        return true;
     }
 
-    public void OpenWaitingUI()
+    public void OpenWaitingUI(bool worked = true)
     {
+        if (!worked)
+        {
+            errorText.gameObject.SetActive(true);
+            errorText.text = Multiplayer_lobby_manager.Instance.ErrorText;
+            return;
+        }
         m_waitCanvas.SetActive(true);
         this.transform.parent.gameObject.SetActive(false);
     }

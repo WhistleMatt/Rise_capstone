@@ -79,7 +79,15 @@ public class LobbyCreationScript : MonoBehaviour
                     },
                 };
 
+                GUIUtility.systemCopyBuffer = Username;
+
                 var result = await Multiplayer_lobby_manager.Instance.CreateLobbyWithParams(LobbyName, options, PlayerCount);
+                if (result == null)
+                {
+                    ErrorTextOption.gameObject.SetActive(true);
+                    ErrorTextOption.text = Multiplayer_lobby_manager.Instance.ErrorText;
+                    return;
+                }
                 m_waitLobbyCanvas.SetActive(true);
                 this.gameObject.SetActive(false);
             }
@@ -104,9 +112,9 @@ public class LobbyCreationScript : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(PlayerCount);
-        Debug.Log(PrivateLobby);
-        Debug.Log(PrivateLobby);
+        //Debug.Log(PlayerCount);
+        //Debug.Log(PrivateLobby);
+        //Debug.Log(PrivateLobby);
     }
 
     public void OnPrivacyValueUpdated(bool _value)

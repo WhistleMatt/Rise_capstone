@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Unity.Services.Lobbies;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEditor;
 
 public class MultiplayerLobbyscreenScript : MonoBehaviour
 {
@@ -35,7 +36,7 @@ public class MultiplayerLobbyscreenScript : MonoBehaviour
     private float updateTimer = 3f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    async void Start()
+    void Start()
     {
 
         isHost = Multiplayer_lobby_manager.Instance.IsHost();
@@ -163,12 +164,18 @@ public class MultiplayerLobbyscreenScript : MonoBehaviour
         }
     }
 
+    public void CopyIDToClip()
+    {
+        GUIUtility.systemCopyBuffer = mPLobbyCode.text;
+    }
+
     private bool refreshLobbyUIText()
     {
         PlayerDataObject nameData = new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public);
         playerList.Clear();
         
         playerList = Multiplayer_lobby_manager.Instance.GetConnectedPlayers();
+        isHost = Multiplayer_lobby_manager.Instance.IsHost();
         switch (playerList.Count)
         {
             case 1:
@@ -176,6 +183,9 @@ public class MultiplayerLobbyscreenScript : MonoBehaviour
                 m_disconnect_P3_BTN.gameObject.SetActive(false);
                 m_disconnect_P4_BTN.gameObject.SetActive(false);
 
+
+
+                m_P1_Name.text = Multiplayer_lobby_manager.Instance.GetPlayerDataAttribute("PlayerName");
                 m_P2_Name.gameObject.SetActive(false);
                 m_P3_Name.gameObject.SetActive(false);
                 m_P4_Name.gameObject.SetActive(false);
@@ -187,10 +197,15 @@ public class MultiplayerLobbyscreenScript : MonoBehaviour
                     m_disconnect_P3_BTN.gameObject.SetActive(false);
                     m_disconnect_P4_BTN.gameObject.SetActive(false);
                 }
+                else
+                {
+                    m_P1_Name.text = Multiplayer_lobby_manager.Instance.GetHostPlayerDataAttribute("PlayerName");
+                }
+
+
+               playerList[1].Data.TryGetValue("PlayerName", out nameData);
 
                 
-                playerList[1].Data.TryGetValue("PlayerName", out nameData);
-
                 m_P2_Name.gameObject.SetActive(true);
                 m_P2_Name.text = nameData.Value;
                 m_P3_Name.gameObject.SetActive(false);
@@ -203,6 +218,11 @@ public class MultiplayerLobbyscreenScript : MonoBehaviour
                     m_disconnect_P3_BTN.gameObject.SetActive(true);
                     m_disconnect_P4_BTN.gameObject.SetActive(false);
                 }
+                else
+                {
+                    m_P1_Name.text = Multiplayer_lobby_manager.Instance.GetHostPlayerDataAttribute("PlayerName");
+                }
+
 
                 playerList[1].Data.TryGetValue("PlayerName", out nameData);
                 m_P2_Name.gameObject.SetActive(true);
@@ -220,6 +240,10 @@ public class MultiplayerLobbyscreenScript : MonoBehaviour
                     m_disconnect_P2_BTN.gameObject.SetActive(true);
                     m_disconnect_P3_BTN.gameObject.SetActive(true);
                     m_disconnect_P4_BTN.gameObject.SetActive(true);
+                }
+                else
+                {
+                    m_P1_Name.text = Multiplayer_lobby_manager.Instance.GetHostPlayerDataAttribute("PlayerName");
                 }
 
                 playerList[1].Data.TryGetValue("PlayerName", out nameData);
