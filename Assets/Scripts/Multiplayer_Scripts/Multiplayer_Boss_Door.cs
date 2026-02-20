@@ -23,7 +23,7 @@ public class Multiplayer_Boss_Door : NetworkBehaviour
     {
         if (m_doorState.Value == DoorState.Open)
         {
-            Destroy(this.gameObject);
+            gameObject.SetActive(false);
         }
     }
 
@@ -31,5 +31,6 @@ public class Multiplayer_Boss_Door : NetworkBehaviour
     public void UpdateDoorStateServerRpc()
     {
         m_doorState.Value += 1;
+        
     }
 }
