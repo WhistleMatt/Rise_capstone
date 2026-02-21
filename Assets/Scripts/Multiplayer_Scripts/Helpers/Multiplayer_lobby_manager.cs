@@ -103,7 +103,10 @@ public class Multiplayer_lobby_manager : MonoBehaviour
 
     private void OurCallbacks_KickedFromLobby()
     {
-        SceneManager.LoadScene("Level1");
+        if (HostLobby == null)
+        {
+            SceneManager.LoadScene("Level1");
+        }
     }
 
     private void OurCallbacks_LobbyEventConnectionStateChanged(LobbyEventConnectionState obj)

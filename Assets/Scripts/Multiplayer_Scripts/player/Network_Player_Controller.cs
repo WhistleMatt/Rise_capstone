@@ -97,6 +97,7 @@ public class Network_Player_Controller : NetworkBehaviour
         Cursor.visible = false;
 
         m_HealItemCanvas.SetActive(true);
+        GetComponent<Use_Item_Multiplayer>().ResetHeals();
         m_PlayerUICanvas.SetActive(true);
         //PlayFabStats.Instance.GetStatistics();
 
@@ -194,7 +195,7 @@ public class Network_Player_Controller : NetworkBehaviour
                 Multiplayer_UI_Manager.instance.ExitCanvas();
                 m_playState = PlayerState.Unpaused;
                 m_HealItemCanvas.SetActive(true);
-                m_PlayerUICanvas.SetActive(false);
+                m_PlayerUICanvas.SetActive(true);
             }
 
         }

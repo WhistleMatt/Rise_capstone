@@ -66,7 +66,6 @@ public class LobbyCreationScript : MonoBehaviour
                         return;
                     }
                     options.Password = Password;
-                    options.IsLocked = true;
                 }
 
                 
