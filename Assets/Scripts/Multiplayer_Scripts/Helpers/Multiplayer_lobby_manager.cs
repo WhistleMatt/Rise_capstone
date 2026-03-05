@@ -12,6 +12,7 @@ using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using WebSocketSharp;
 
 public class Multiplayer_lobby_manager : MonoBehaviour
 {
@@ -114,8 +115,22 @@ public class Multiplayer_lobby_manager : MonoBehaviour
         Debug.Log(obj);
     }
 
+    private async void OnDestroy()
+    {
+        try
+        {
+            AuthenticationService.Instance.SignOut();
+        }
+        catch (AuthenticationException exe)
+        {
+            Debug.Log(exe);
+            //SceneManager.LoadScene("Level1");
+        }
+    }
+
     private async void Start()
     {
+        bool checkIfNameExists = false;
 
         string name = "Foo Fighter";
         OurUserName = PlayerPrefs.GetString("USERNAME", name);
@@ -128,6 +143,12 @@ public class Multiplayer_lobby_manager : MonoBehaviour
         }
         catch (AuthenticationException ex)
         {
+            checkIfNameExists = true;
+            Debug.Log(ex);
+        }
+
+        if (checkIfNameExists)
+        {
             try
             {
                 await AuthenticationService.Instance.SignInWithUsernamePasswordAsync(OurUserName, "SampleText1@3");
@@ -135,8 +156,8 @@ public class Multiplayer_lobby_manager : MonoBehaviour
             catch (AuthenticationException exe)
             {
                 Debug.Log(exe);
+                //SceneManager.LoadScene("Level1");
             }
-            
         }
 
         //await AuthenticationService.Instance.SignInAnonymouslyAsync();
