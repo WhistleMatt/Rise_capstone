@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Networking.Transport;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Video;
 //written by Nicolas Chatziargiriou
 //extended by Matthew Whistle
 public class PlayerStatsController : MonoBehaviour
@@ -33,6 +35,12 @@ public class PlayerStatsController : MonoBehaviour
     private float _respawnTimer=0;
     private float _respawnTime=9.0f;
     private bool showDeathTut = true;
+
+    [SerializeField] private VideoClip clip;
+    [SerializeField] private VideoPlayer Vplayer;
+
+    [SerializeField] private bool isOnline = false;
+
     private void Awake()
     {
        // _Singleton.gameObject.GetComponent<PlayFabStats>().GetStatistics();
@@ -166,76 +174,126 @@ public class PlayerStatsController : MonoBehaviour
     {
         //    GameObject.FindGameObjectWithTag("xSlider").GetComponent<Slider>().value = _mouseX;
         //    GameObject.FindGameObjectWithTag("ySlider").GetComponent<Slider>().value = _mouseY;
-      
-
+        var query = GetComponent<Network_Player_Controller>();
+        if(query != null)
+        {
+            isOnline = true;
+        }
+        if (Vplayer != null)
+        {
+            Vplayer.seekCompleted += Vplayer_seekCompleted;
+        }
+        
 
     }
-    private void Update()
+
+    private void Vplayer_seekCompleted(VideoPlayer source)
     {
-       
-        if(getPHealth()<=0)
+        Debug.Log("finished");
+        //throw new System.NotImplementedException();
+    }
+
+    private async void Update()
+    {
+        var playerCon = GetComponent<Network_Player_Controller>();
+        if (playerCon != null)
+        {
+            if(!playerCon.IsOwner)
+            {
+                return;
+            }
+        }
+        if (getPHealth() <= 0)
         {
             _respawnTimer = _respawnTimer + Time.deltaTime;
             if (this.gameObject.tag != "ammo")
             {
-                this.gameObject.GetComponent<Animator>().SetTrigger("isDead");
-                _pushBox.gameObject.SetActive(false);
-             
+                var animatorCheck = this.gameObject.GetComponent<Animator>();
+                if (animatorCheck != null)
+                {
+                    animatorCheck.SetTrigger("isDead");
+                }
+                if (_pushBox != null)
+                { 
+                    _pushBox.gameObject.SetActive(false);
+                }
+
                 m_isDead = true;
-             
-
-
             }
 
-                if (this.gameObject.tag == "Enemy" && !gaveXP)
-                {
-                    GameObject.FindWithTag("Player").GetComponent<PlayerStatsController>().setExperiancePoints(GameObject.FindWithTag("Player").GetComponent<PlayerStatsController>().getExperiancePoints() + 2);
-                    gaveXP = true;
-                    GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<TargetSelector>().disableTargeting();
-                    this.gameObject.transform.root.tag = "DeadEnemy";
+            if (this.gameObject.tag == "Enemy" && !gaveXP)
+            {
+                GameObject.FindWithTag("Player").GetComponent<PlayerStatsController>().setExperiancePoints(GameObject.FindWithTag("Player").GetComponent<PlayerStatsController>().getExperiancePoints() + 2);
+                gaveXP = true;
+                GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<TargetSelector>().disableTargeting();
+                this.gameObject.transform.root.tag = "DeadEnemy";
                 this.gameObject.GetComponent<AudioSource>().clip = _deadSplat;
                 this.gameObject.GetComponent<AudioSource>().loop = false;
                 this.gameObject.GetComponent<AudioSource>().volume = 20;
                 this.gameObject.GetComponent<AudioSource>().Play();
                 GameObject.FindWithTag("Player").GetComponentInChildren<TargetList>().removeTarget(this.gameObject);
-                }
+            }
 
 
-                
-                //show you died screen
-                if (this.gameObject.transform.root.tag=="Player")
-                {
+
+            //show you died screen
+            if (this.gameObject.transform.root.tag == "Player")
+            {
                 _damageSoundSource.enabled = false;
-                if (_YouDied.activeSelf==false)
-                GameObject.FindGameObjectWithTag("PlayerUI").GetComponent<Canvas>().enabled = false;
+                if (_YouDied.activeSelf == false)
+                {
+                    var result = GameObject.FindGameObjectWithTag("PlayerUI");
+                    if (result != null)
+                    {
+                        result.GetComponent<Canvas>().enabled = false;
+                    }
                     _YouDied.SetActive(true);
-                this.gameObject.GetComponent<PlayerStatsController>().setExperiancePoints(0);
-                this.gameObject.GetComponentInChildren<AudioSource>().volume = 0;
-                PlayFabStats.Instance.UpdateEXP(0);
-                    if (_respawnTimer >= _respawnTime && GameObject.FindGameObjectWithTag("Single").GetComponent<PlayFabStats>().levelTutorial==1)
+                    this.gameObject.GetComponent<Animator>().SetBool("isDead", true);
+                    this.gameObject.GetComponent<PlayerStatsController>().setExperiancePoints(0);
+                    this.gameObject.GetComponentInChildren<AudioSource>().volume = 0;
+                    PlayFabStats.Instance.UpdateEXP(0);
+                    if (_respawnTimer >= _respawnTime && GameObject.FindGameObjectWithTag("Single").GetComponent<PlayFabStats>().levelTutorial == 1)
                     {
                         _YouDied.SetActive(false);
-                        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                        SceneManager.LoadScene("Level1");
                     }
                     else if (_respawnTimer >= _respawnTime && GameObject.FindGameObjectWithTag("Single").GetComponent<PlayFabStats>().levelTutorial == 0)
                     {
-                 
-                    if (showDeathTut)
-                    {
-                        GameObject.FindGameObjectWithTag("PlayerUI").GetComponent<Canvas>().enabled = true;
-                        GameObject.FindGameObjectWithTag("SoulGirl").GetComponent<SoulsGirlDialogue>().chapter = 26;
-                        GameObject.FindGameObjectWithTag("SoulGirl").GetComponent<DialogueController>().recieveDialogue();
-                        showDeathTut = false;
-                    }
-                   
-                    _respawnTimer = 0;
+
+                        if (showDeathTut)
+                        {
+                            GameObject.FindGameObjectWithTag("PlayerUI").GetComponent<Canvas>().enabled = true;
+                            GameObject.FindGameObjectWithTag("SoulGirl").GetComponent<SoulsGirlDialogue>().chapter = 26;
+                            GameObject.FindGameObjectWithTag("SoulGirl").GetComponent<DialogueController>().recieveDialogue();
+                            showDeathTut = false;
+                        }
+
+                        _respawnTimer = 0;
 
                     }
 
                 }
+                else
+                {
+                    Debug.Log("video time: " + Vplayer.time);
+                    if (Vplayer.time >= 9.7) //inconsistent in debugging, but 9.7 seems to be the value for the video's duration.
+                    {
+                        if (Multiplayer_lobby_manager.Instance != null)
+                        {
+                            if (isOnline)
+                            {
+                                await Multiplayer_lobby_manager.Instance.LobbyScreenQuit();
+                            }
+                        }
+                        else
+                        {
+                            SceneManager.LoadScene("Level1");
+                        }
+                    }
+                }
 
-            
 
+            }
         }
         if (getPStamina() < getStaminahMax())
         {
