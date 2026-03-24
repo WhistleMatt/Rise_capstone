@@ -38,7 +38,18 @@ public class EnemyWander : FSMC_Behaviour
         if (m_players.Length <= 1)
         {
             var playerObject = GameObject.FindGameObjectWithTag("Player");
-            if (playerObject == null) return;
+            if (playerObject == null)
+            {
+                executer.gameObject.GetComponent<EnemyPathController>().disablePathing();
+                return;
+            }
+            else
+            {
+                if (!executer.gameObject.GetComponent<EnemyPathController>().GetPathingEnabled())
+                { 
+                    executer.gameObject.GetComponent<EnemyPathController>().enablePathing(); 
+                }
+            }
             if (Vector3.Distance(executer.gameObject.transform.position, playerObject.transform.position) <= 5)
             {
                 executer.gameObject.GetComponent<EnemyPathController>().disablePathing();

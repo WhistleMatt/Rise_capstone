@@ -32,6 +32,11 @@ public class EnemyPathController : MonoBehaviour
     private PlayerStatsController playerStatsController;
     private Multiplayer_Enemy_Stat_Controller multistatscont;
 
+    public bool GetPathingEnabled()
+    {
+        return pathing;
+    }
+
     public void resumePathing()
     {
         this.gameObject.GetComponent<NavMeshAgent>().SetDestination(nextNode.transform.position);

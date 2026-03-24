@@ -1,4 +1,6 @@
+using FSMC.Runtime;
 using Unity.Netcode;
+using Unity.Services.Matchmaker.Models;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -32,9 +34,17 @@ public class Multiplayer_Enemy_Stat_Controller : NetworkBehaviour
     private float _respawnTimer = 0;
     private float _respawnTime = 9.0f;
     private bool showDeathTut = true;
+
+    private Vector3 spawnposition;
+
     private void Awake()
     {
         // _Singleton.gameObject.GetComponent<PlayFabStats>().GetStatistics();
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        spawnposition = transform.position;
     }
 
     public bool isDead()
@@ -164,6 +174,19 @@ public class Multiplayer_Enemy_Stat_Controller : NetworkBehaviour
     public void setPDefenseMax(float defense)
     {
         _pDefenseMax.Value = defense;
+    }
+
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void ResfreshStatsRpc()
+    {
+        _pHealth.Value = _pHealthMax.Value;
+
+        gameObject.GetComponent<FSMC_Executer>().SetCurrentState("Walk");
+
+        gameObject.transform.position = spawnposition;
+
+        m_isDead = false;
+
     }
 
     private void Start()
