@@ -10,20 +10,23 @@ public class HurtBoxLogic : MonoBehaviour
     private GameObject enemyBar;
 
     private PlayerStatsController m_single_stats_cont;
-    private Multiplayer_Enemy_Stat_Controller m_multi_stat_con;
+    private Multiplayer_Enemy_Stat_Controller m_multi_stat_con_enemy;
+    private Network_Player_stats_controller m_multi_stat_con_player;
 
     private void Start()
     {
         m_single_stats_cont = this.transform.parent.gameObject.GetComponent<PlayerStatsController>();
-        m_multi_stat_con = this.transform.parent.gameObject.GetComponent<Multiplayer_Enemy_Stat_Controller>();
+        m_multi_stat_con_enemy = this.transform.parent.gameObject.GetComponent<Multiplayer_Enemy_Stat_Controller>();
+        m_multi_stat_con_player = this.transform.parent.gameObject.GetComponent<Network_Player_stats_controller>();
     }
 
     private void Update()
     {
-        if (m_single_stats_cont == null && m_multi_stat_con == null)
+        if (m_single_stats_cont == null && m_multi_stat_con_enemy == null)
         {
             m_single_stats_cont = this.transform.parent.gameObject.GetComponent<PlayerStatsController>();
-            m_multi_stat_con = this.transform.parent.gameObject.GetComponent<Multiplayer_Enemy_Stat_Controller>();
+            m_multi_stat_con_enemy = this.transform.parent.gameObject.GetComponent<Multiplayer_Enemy_Stat_Controller>();
+            m_multi_stat_con_player = this.transform.parent.gameObject.GetComponent<Network_Player_stats_controller>();
         }
     }
 
@@ -68,13 +71,13 @@ public class HurtBoxLogic : MonoBehaviour
                 {
                     if (other.gameObject.GetComponentInChildren<HitBoxLogic>().GetSingleStats() != null)
                     {
-                        damageMod = ((float)((other.gameObject.GetComponentInChildren<HitBoxLogic>().GetSingleStats().getPAttck() * 0.75) - (m_multi_stat_con.getPDefense() * 0.15)));
-                        m_multi_stat_con.setPHealth(m_multi_stat_con.getPHealth() - damageMod);
+                        damageMod = ((float)((other.gameObject.GetComponentInChildren<HitBoxLogic>().GetSingleStats().getPAttck() * 0.75) - (m_multi_stat_con_enemy.getPDefense() * 0.15)));
+                        m_multi_stat_con_enemy.setPHealth(m_multi_stat_con_enemy.getPHealth() - damageMod);
                     }
                     else
                     {
-                        damageMod = ((float)((other.gameObject.GetComponentInChildren<HitBoxLogic>().GetMultiStats().getPAttck() * 0.75) - (m_multi_stat_con.getPDefense() * 0.15)));
-                        m_multi_stat_con.setPHealth(m_multi_stat_con.getPHealth() - damageMod);
+                        damageMod = ((float)((other.gameObject.GetComponentInChildren<HitBoxLogic>().GetMultiStats().getPAttck() * 0.75) - (m_multi_stat_con_enemy.getPDefense() * 0.15)));
+                        m_multi_stat_con_enemy.setPHealth(m_multi_stat_con_enemy.getPHealth() - damageMod);
                     }
                         this.GetComponent<AudioSource>().Play();
 
@@ -82,9 +85,9 @@ public class HurtBoxLogic : MonoBehaviour
                     if (id == HitBoxController.ePlayer.p2)
                     {
                         enemyBar = GameObject.FindGameObjectWithTag("EnemyHealthBar");
-                        enemyBar.GetComponent<EnemyHealthBarController>().SetMaxHealth(m_multi_stat_con.getPHealthMax());
-                        enemyBar.GetComponent<EnemyHealthBarController>().SetHealth(m_multi_stat_con.getPHealth());
-                        if (m_multi_stat_con.getPHealth() <= 0)
+                        enemyBar.GetComponent<EnemyHealthBarController>().SetMaxHealth(m_multi_stat_con_enemy.getPHealthMax());
+                        enemyBar.GetComponent<EnemyHealthBarController>().SetHealth(m_multi_stat_con_enemy.getPHealth());
+                        if (m_multi_stat_con_enemy.getPHealth() <= 0)
                         {
                             this.gameObject.SetActive(false);
                         }

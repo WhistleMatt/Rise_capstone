@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8802139778195678443
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 693247158211554478, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -78.68
+      objectReference: {fileID: 0}
+    - target: {fileID: 693247158211554478, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 693247158211554478, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -100.97362
+      objectReference: {fileID: 0}
+    - target: {fileID: 693247158211554478, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 693247158211554478, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 693247158211554478, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 693247158211554478, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 693247158211554478, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 693247158211554478, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 693247158211554478, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1060788162957038657, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: m_Name
+      value: Multiplayer_WizardBoss Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 4359820362130401664, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: m_multi_stat_con
+      value: 
+      objectReference: {fileID: 2616809780863928628}
+    - target: {fileID: 5684975544130518284, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: Ownership
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5684975544130518284, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3657450805
+      objectReference: {fileID: 0}
+    - target: {fileID: 5684975544130518284, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5684975544130518284, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 1017859962
+      objectReference: {fileID: 0}
+    - target: {fileID: 8656895956196318289, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: _spawns.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 1509873603641123531, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+    - {fileID: 5690253197274328419, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+--- !u!114 &2616809780863928628 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6807118129678380511, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+  m_PrefabInstance: {fileID: 8802139778195678443}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aab963b3e173d96478279b85bc7d4a0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Multiplayer_WizardStat_Controller

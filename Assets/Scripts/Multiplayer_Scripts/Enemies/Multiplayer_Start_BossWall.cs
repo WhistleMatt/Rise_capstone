@@ -1,6 +1,7 @@
 using PlayFab.MultiplayerModels;
 using Unity.Netcode;
 using Unity.Services.Matchmaker.Models;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Multiplayer_Start_BossWall : NetworkBehaviour
@@ -104,6 +105,7 @@ public class Multiplayer_Start_BossWall : NetworkBehaviour
     }
 
     [SerializeField] private NetworkVariable<WallDataStruct> wallData = new NetworkVariable<WallDataStruct>(new WallDataStruct(1));
+    [SerializeField] private NetworkVariable<bool> _bossStarted = new NetworkVariable<bool>(false);
 
     [SerializeField] private NetworkVariable<bool> m_playerOne_entered = new NetworkVariable<bool>(false);
     [SerializeField] private NetworkVariable<bool> m_playerTwo_entered = new NetworkVariable<bool>(false);
@@ -115,7 +117,8 @@ public class Multiplayer_Start_BossWall : NetworkBehaviour
     //[SerializeField]
     // private List<GameObject> EnemyTemplates = new List<GameObject>();
     // [SerializeField] private List<GameObject> EnemyList = new List<GameObject>();
-    [SerializeField] private GameObject _boss;
+    [SerializeField] private GameObject _bossPrefab;
+    [SerializeField] private GameObject _bossRef;
     [SerializeField] private bool bossBeaten = false;
     private bool has_triggered = false;
 
@@ -133,11 +136,16 @@ public class Multiplayer_Start_BossWall : NetworkBehaviour
     {
         if(wallData.Value.IsActive())
         {
-            if(!_boss.gameObject.activeInHierarchy)
+            if (!_wall.activeInHierarchy)
             {
-                _boss.SetActive(true);
+                _wall.SetActive(true);
+            }
+            if (!_hpBar.activeInHierarchy)
+            {
+                _hpBar.SetActive(true);
             }
         }
+        
         m_controllerList = GameObject.FindObjectsByType<Network_Player_Controller>(FindObjectsSortMode.InstanceID);
     }
 
@@ -210,14 +218,15 @@ public class Multiplayer_Start_BossWall : NetworkBehaviour
 
     private void spawnWall()
     {
-        //_wall.gameObject.SetActive(true);
+        _wall.gameObject.SetActive(true);
 
     }
 
     private void resetEnemies()
     {
-        _boss.gameObject.SetActive(true);
-        //_hpBar.SetActive(true);
+        //_boss.gameObject.SetActive(true);
+        SpawnBossRpc();
+        _hpBar.SetActive(true);
 
         foreach (Network_Player_Controller player in m_controllerList)
         {
@@ -242,6 +251,18 @@ public class Multiplayer_Start_BossWall : NetworkBehaviour
         tempData.UpdatePlayerCount(m_controllerList.Length);
         tempData.ReadyPlayerUp((int)_playerID, false);
         wallData.Value = tempData;
+    }
+
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void SpawnBossRpc()
+    {
+        if (_bossStarted.Value)
+        {
+            return;
+        }
+        _bossStarted.Value = true;
+        var obj = Instantiate(_bossPrefab);
+        obj.GetComponent<NetworkObject>().Spawn();
     }
 
 }

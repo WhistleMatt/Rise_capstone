@@ -1,14 +1,14 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public class Multiplayer_WizardStat_Controller : MonoBehaviour
+public class Multiplayer_WizardStat_Controller : NetworkBehaviour
 {
-    [SerializeField] NetworkVariable<float> _pHealth = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    [SerializeField] NetworkVariable<float> _pHealthMax = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    [SerializeField] NetworkVariable<float> _pAttck = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    [SerializeField] NetworkVariable<float> _pAttckMax = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    [SerializeField] NetworkVariable<float> _pDefense = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    [SerializeField] NetworkVariable<float> _pDefenseMax = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    [SerializeField] NetworkVariable<float> _pHealth = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [SerializeField] NetworkVariable<float> _pHealthMax = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [SerializeField] NetworkVariable<float> _pAttck = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [SerializeField] NetworkVariable<float> _pAttckMax = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [SerializeField] NetworkVariable<float> _pDefense = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [SerializeField] NetworkVariable<float> _pDefenseMax = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [SerializeField] private float _experiancePoints;
     [SerializeField] private GameObject _pushBox;
     [SerializeField] private GameObject _knightStatue;
@@ -16,6 +16,14 @@ public class Multiplayer_WizardStat_Controller : MonoBehaviour
 
     private bool m_isDead = false;
     private bool gaveXP = false;
+
+    public override void OnNetworkSpawn()
+    {
+        //networkstarted = true;
+
+        //this.gameObject.SetActive(false);
+        base.OnNetworkSpawn();
+    }
 
     public bool isDead()
     {
@@ -43,6 +51,7 @@ public class Multiplayer_WizardStat_Controller : MonoBehaviour
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     private void TakeDamageServerRpc(float health)
     {
+        Debug.Log("Damage taken!");
         if (health > _pHealthMax.Value)
         {
             _pHealth.Value = _pHealthMax.Value;
@@ -111,24 +120,28 @@ public class Multiplayer_WizardStat_Controller : MonoBehaviour
     private void Update()
     {
 
+        Debug.Log("Boss HP: " + getPHealth());
+
         if (getPHealth() <= 0)
         {
             //  this.gameObject.GetComponent<Animator>().SetTrigger("isDead");
 
             _pushBox.gameObject.SetActive(false);
-            _knightStatue.SetActive(true);
+            //_knightStatue.SetActive(true);
             m_isDead = true;
             this.gameObject.SetActive(false);
-            _hpBar.SetActive(false);
-            GameObject.FindGameObjectWithTag("SoulGirl").GetComponent<SoulsGirlDialogue>().chapter = 31;
-            GameObject.FindGameObjectWithTag("SoulGirl").GetComponent<DialogueController>().recieveDialogue();
+            //_hpBar.SetActive(false);
 
+            //GameObject.FindGameObjectWithTag("SoulGirl").GetComponent<SoulsGirlDialogue>().chapter = 31;
+            //GameObject.FindGameObjectWithTag("SoulGirl").GetComponent<DialogueController>().recieveDialogue();
 
+            /*
             if (this.gameObject.tag == "Enemy" && !gaveXP)
             {
                 GameObject.FindWithTag("Player").GetComponent<PlayerStatsController>().setExperiancePoints(GameObject.FindWithTag("Player").GetComponent<PlayerStatsController>().getExperiancePoints() + 2);
                 gaveXP = true;
             }
+            */
         }
 
     }

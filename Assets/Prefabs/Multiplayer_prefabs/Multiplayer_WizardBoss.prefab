@@ -154,9 +154,15 @@ MonoBehaviour:
   - {fileID: 7819859725378067294}
   - {fileID: 3855258965017353539}
   _ammo: {fileID: 1978563998034671, guid: 6a54d6a5f30ae694fbb10eadf4ae9e2a, type: 3}
+  _TeleportTimer:
+    m_InternalValue: 0
+  _ShrinkTimer:
+    m_InternalValue: 0
   _teleportTime: 12
   _teleportTimer: 0
   _shrinkRatio: 1
+  _shrinkTime: 0
+  _shrinkTimer: 0
 --- !u!114 &324672670841354809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,6 +221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aab963b3e173d96478279b85bc7d4a0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Multiplayer_WizardStat_Controller
+  ShowTopMostFoldoutHeaderGroup: 1
   _pHealth:
     m_InternalValue: 40
   _pHealthMax:

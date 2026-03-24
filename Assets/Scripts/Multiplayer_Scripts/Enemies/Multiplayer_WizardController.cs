@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -26,7 +27,9 @@ public class Multiplayer_WizardController : NetworkBehaviour
     {
         networkstarted = true;
 
-        this.gameObject.SetActive(false);
+        _spawns = GameObject.FindGameObjectsWithTag("BossTPoint").ToList<GameObject>();
+
+        //this.gameObject.SetActive(false);
         base.OnNetworkSpawn();
     }
 
