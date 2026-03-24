@@ -14,7 +14,18 @@ public class lookAtCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 camLoc = new Vector3(_cam.transform.position.x, this.transform.position.y, _cam.transform.position.z);
-        this.transform.LookAt(camLoc);
+        if (_cam != null)
+        {
+            Vector3 camLoc = new Vector3(_cam.transform.position.x, this.transform.position.y, _cam.transform.position.z);
+            this.transform.LookAt(camLoc);
+        }
+        else
+        {
+            var obj = GameObject.Find("PlayerCamera");
+            if (obj != null)
+            {
+                _cam = obj;
+            }
+        }
     }
 }
