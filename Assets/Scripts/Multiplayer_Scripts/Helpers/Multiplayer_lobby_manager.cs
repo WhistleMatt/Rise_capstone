@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
@@ -18,10 +19,17 @@ public class Multiplayer_lobby_manager : MonoBehaviour
 {
     public static Multiplayer_lobby_manager Instance;
     private Lobby HostLobby;
+
+    [SerializeField] private GameObject disconCanvas;
+    [SerializeField] private DisconnectedUI disconUi;
+
     [SerializeField] private Lobby JoinedLobby;
     [SerializeField] private string lobby_joinname;
     [SerializeField] private string lobbyid;
     [SerializeField] string JoinCode;
+
+    [SerializeField] string HostID;
+    [SerializeField] string ourID;
 
     private Player ourPlayer;
 
@@ -46,11 +54,17 @@ public class Multiplayer_lobby_manager : MonoBehaviour
         ourCallbacks.LobbyEventConnectionStateChanged += OurCallbacks_LobbyEventConnectionStateChanged;
         ourCallbacks.KickedFromLobby += OurCallbacks_KickedFromLobby;
         ourCallbacks.PlayerLeft += OurCallbacks_PlayerLeft;
+        ourCallbacks.PlayerJoined += OurCallbacks_PlayerJoined;
         ourCallbacks.DataChanged += OurCallbacks_DataChanged;
         ourCallbacks.LobbyChanged += OurCallbacks_LobbyChanged;
     }
 
-    private void OurCallbacks_LobbyChanged(ILobbyChanges obj)
+    private void OurCallbacks_PlayerJoined(List<LobbyPlayerJoined> obj)
+    {
+        //throw new System.NotImplementedException();
+    }
+
+    private async void OurCallbacks_LobbyChanged(ILobbyChanges obj)
     {
 
         if(JoinedLobby != null)
@@ -74,7 +88,11 @@ public class Multiplayer_lobby_manager : MonoBehaviour
 
                     if (key == "JoinCode")
                     {
-                        //JoinCode = obj.Data.Value[key].Value.Value;
+                        if (HostLobby != null) return;
+                        JoinCode = obj.Data.Value[key].Value.Value;
+                        await ConnectClientInLobby();
+                        GameObject.Find("WaitingRoomCanvas").gameObject.SetActive(false);
+
                     }
 
                     if (key == "RedirectLobbyID")
@@ -106,7 +124,23 @@ public class Multiplayer_lobby_manager : MonoBehaviour
     {
         if (HostLobby == null)
         {
-            SceneManager.LoadScene("Level1");
+            disconCanvas.SetActive(true);
+            disconUi.DisconnectReasonText("Kicked from lobby");
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+            GameObject ui_Check = GameObject.Find("WaitingRoomCanvas");
+            if (ui_Check != null)
+            {
+                ui_Check.SetActive(false);
+                return;
+            }
+            ui_Check = GameObject.Find("Multiplayer_Pause_UI");
+            if (ui_Check != null)
+            {
+                ui_Check.SetActive(false);
+                return;
+            }
+            //SceneManager.LoadScene("Level1");
         }
     }
 
@@ -117,23 +151,45 @@ public class Multiplayer_lobby_manager : MonoBehaviour
 
     private async void OnDestroy()
     {
-        try
-        {
-            AuthenticationService.Instance.SignOut();
+            try
+            {
+                await AuthenticationService.Instance.UpdatePlayerNameAsync("Offline");
+
+                AuthenticationService.Instance.SignOut();
+
+                if (NetworkManager.Singleton.IsHost)
+                {
+                    NetworkManager.Singleton.Shutdown(true);
+                }
         }
-        catch (AuthenticationException exe)
-        {
-            Debug.Log(exe);
-            //SceneManager.LoadScene("Level1");
-        }
+            catch (AuthenticationException exe)
+            {
+                Debug.Log(exe);
+                //SceneManager.LoadScene("Level1");
+            }
     }
 
     private async void Start()
     {
+
         bool checkIfNameExists = false;
 
         string name = "Foo Fighter";
+        string IDHash = "#P6ZMI";
+
+        string testOutput = PlayerPrefs.GetString("IDHASH", IDHash);
+        Debug.Log("our hash is " + testOutput);
+        if (testOutput == IDHash)
+        {
+            Debug.Log("unique Hash not set");
+            var result = Hash128.Compute(name);
+            Debug.Log("new hash is: " + result);
+        }
         OurUserName = PlayerPrefs.GetString("USERNAME", name);
+
+        InitializationOptions options = new InitializationOptions();
+        var profile = Random.Range(0, 15001);
+        options.SetProfile(profile.ToString());
 
         await UnityServices.InitializeAsync();
 
@@ -152,6 +208,29 @@ public class Multiplayer_lobby_manager : MonoBehaviour
             try
             {
                 await AuthenticationService.Instance.SignInWithUsernamePasswordAsync(OurUserName, "SampleText1@3");
+
+                var result = await AuthenticationService.Instance.GetPlayerNameAsync();
+
+                Debug.Log("Username1: " + result);
+
+                if (!result.Contains("Offline"))
+                {
+                    disconCanvas.SetActive(true);
+                    disconUi.gameObject.SetActive(true);
+                    disconUi.DisconnectReasonText("account already logged in. please return to the main menu and select a new name.");
+                    GameObject.Find("LobbyCanvas").SetActive(false);
+                }
+
+                result = await AuthenticationService.Instance.UpdatePlayerNameAsync("baller");
+
+
+                Debug.Log("Username2: " + result);
+
+
+                ourID = AuthenticationService.Instance.PlayerId;
+
+                var test = AuthenticationService.Instance.Profile;
+
             }
             catch (AuthenticationException exe)
             {
@@ -251,6 +330,8 @@ public class Multiplayer_lobby_manager : MonoBehaviour
                 {
                     var result = await LobbyService.Instance.GetLobbyAsync(JoinedLobby.Id);
 
+                    HostID = result.HostId;
+
                     JoinedLobby = result;
 
                     bool exists = false;
@@ -281,7 +362,7 @@ public class Multiplayer_lobby_manager : MonoBehaviour
                     if (!exists)
                     {
                         Debug.Log("Not here");
-                        SceneManager.LoadScene("Level1");
+                        //SceneManager.LoadScene("Level1");
                     }
 
                     lobbyid = JoinedLobby.Id;
@@ -365,6 +446,7 @@ public class Multiplayer_lobby_manager : MonoBehaviour
             {
                 PlayerDataObject playerCheck = null;
                 HostLobby = await LobbyService.Instance.GetLobbyAsync(HostLobby.Id);
+                HostID = HostLobby.HostId;
                 foreach (var kvp in HostLobby.Players)
                 {
                     kvp.Data.TryGetValue("QuitLobby", out playerCheck);
@@ -453,6 +535,8 @@ public class Multiplayer_lobby_manager : MonoBehaviour
             await LobbyService.Instance.SubscribeToLobbyEventsAsync(HostLobby.Id, ourCallbacks);
 
             lobbyid = HostLobby.Id;
+
+            HostID = HostLobby.HostId;
 
 
 
@@ -561,6 +645,8 @@ public class Multiplayer_lobby_manager : MonoBehaviour
 
             lobby_joinname = JoinedLobby.Name;
 
+            HostID = JoinedLobby.HostId;
+
             PlayerDataObject pdo;
             PlayerDataObject _ourPlayer;
 
@@ -607,7 +693,7 @@ public class Multiplayer_lobby_manager : MonoBehaviour
 
     private void OurCallbacks_LobbyDeleted()
     {
-        Debug.Log("this bitch deleted, yeet.");
+        //Debug.Log("this bitch deleted, yeet.");
 
         //throw new System.NotImplementedException();
     }
@@ -817,7 +903,8 @@ public class Multiplayer_lobby_manager : MonoBehaviour
             
             var allocation = await RelayService.Instance.CreateAllocationAsync(HostLobby.MaxPlayers);
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, "udp"));
-            
+            Debug.Log(NetworkManager.Singleton.GetComponent<UnityTransport>().ServerClientId);
+
             var joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             
 
@@ -855,6 +942,8 @@ public class Multiplayer_lobby_manager : MonoBehaviour
 
             await LobbyService.Instance.UpdatePlayerAsync(HostLobby.Id, playerId, playerOpts);
 
+            ourID = AuthenticationService.Instance.PlayerId;
+
             return NetworkManager.Singleton.StartHost() ? JoinCode : null;
 
             //...
@@ -863,6 +952,26 @@ public class Multiplayer_lobby_manager : MonoBehaviour
         {
             Debug.Log(e);
             return "";
+        }
+    }
+
+    private async void OnApplicationQuit()
+    {
+        try
+        {
+            await AuthenticationService.Instance.UpdatePlayerNameAsync("Offline");
+
+            AuthenticationService.Instance.SignOut();
+
+            if (NetworkManager.Singleton.IsHost)
+            {
+                NetworkManager.Singleton.Shutdown(true);
+            }
+        }
+        catch (AuthenticationException exe)
+        {
+            Debug.Log(exe);
+            //SceneManager.LoadScene("Level1");
         }
     }
 }
