@@ -28,6 +28,12 @@ TagManager:
   - Debugger
   - Player_Hitbox
   - ammo
+  - LockedDoor
+  - LockedBossDoor
+  - Environment
+  - CompanionDefaultPos
+  - TrainingCheckpoint
+  - BossTPoint
   layers:
   - Default
   - TransparentFX

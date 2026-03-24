@@ -2186,6 +2186,10 @@ PrefabInstance:
       propertyPath: NetworkConfig.PlayerPrefab
       value: 
       objectReference: {fileID: 314372399060018651, guid: 034b9c5a37d5164489819209f90698de, type: 3}
+    - target: {fileID: 7535465593338508687, guid: 6102bf4e6dabf264bb1898298e7ed582, type: 3}
+      propertyPath: NetworkConfig.EnableSceneManagement
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
