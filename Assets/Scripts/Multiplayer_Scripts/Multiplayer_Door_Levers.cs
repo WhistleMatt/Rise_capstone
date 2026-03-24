@@ -7,6 +7,7 @@ public class Multiplayer_Door_Levers : NetworkBehaviour
     private Multiplayer_Boss_Door m_doorScript;
     [SerializeField] private Transform _OnPos;
     [SerializeField] private float _Speed;
+    [SerializeField] private string DoorTag;
 
     [SerializeField] private NetworkVariable<bool> m_LeverPulled = new NetworkVariable<bool>(false);
     [SerializeField] private NetworkVariable<bool> m_LeverMoved = new NetworkVariable<bool>(false);
@@ -14,7 +15,7 @@ public class Multiplayer_Door_Levers : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        var doorObject = GameObject.FindGameObjectWithTag("LockedDoor");
+        var doorObject = GameObject.FindGameObjectWithTag(DoorTag);
         m_doorScript = doorObject.GetComponent<Multiplayer_Boss_Door>();
     }
 
