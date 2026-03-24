@@ -80,6 +80,8 @@ public class Network_Player_Controller : NetworkBehaviour
 
         testBool.OnValueChanged += TestVal;
 
+        GameObject.Find("DebugCamera").SetActive(false);
+
         //if (IsHost) testBool.Value = true;
 
         NetworkManager.Singleton.OnClientDisconnectCallback += Singleton_OnClientDisconnectCallback;
@@ -97,8 +99,9 @@ public class Network_Player_Controller : NetworkBehaviour
         Cursor.visible = false;
 
         m_HealItemCanvas.SetActive(true);
-        GetComponent<Use_Item_Multiplayer>().ResetHeals();
         m_PlayerUICanvas.SetActive(true);
+        GetComponent<Use_Item_Multiplayer>().ResetHealsRPC();
+        
         //PlayFabStats.Instance.GetStatistics();
 
         //if (PlayFabStats.Instance.JustStarted == 0)
@@ -117,15 +120,20 @@ public class Network_Player_Controller : NetworkBehaviour
 
     private void Singleton_OnServerStopped(bool obj)
     {
-        SceneManager.LoadScene("Level1");
+        //SceneManager.LoadScene("Level1");
 
         //throw new System.NotImplementedException();
     }
 
+    private void OnDestroy()
+    {
+        if (!IsOwner) return;
+        SceneManager.LoadScene("Level1");
+    }
 
     private void Singleton_OnClientConnectedCallback(ulong obj)
     {
-        Debug.Log(NetworkObjectId);
+        Debug.Log("connected client ID: " + obj);
 
         //throw new System.NotImplementedException();
     }
@@ -138,7 +146,7 @@ public class Network_Player_Controller : NetworkBehaviour
             return; 
         }
 
-        SceneManager.LoadScene("Level1");
+        //SceneManager.LoadScene("Level1");
 
         //throw new System.NotImplementedException();
     }
@@ -166,6 +174,12 @@ public class Network_Player_Controller : NetworkBehaviour
         }
         if (context.performed)
         {
+            var diedUICheck = GameObject.Find("DeathCanvas");
+            if (diedUICheck != null)
+            {
+                return;
+            }
+
             if (m_playStateSwapped == 1)
             {
                 m_playStateSwapped = 0;
@@ -206,6 +220,11 @@ public class Network_Player_Controller : NetworkBehaviour
         if (!IsOwner) return;
         if (context.performed)
         {
+            var diedUICheck = GameObject.Find("DeathCanvas");
+            if (diedUICheck != null)
+            {
+                return;
+            }
             Cursor.lockState = CursorLockMode.Locked;
             input.SwitchCurrentActionMap("Player");
             UIManager.instance.Unpause();
@@ -217,7 +236,7 @@ public class Network_Player_Controller : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        m_PlayerUICanvas.GetComponentInChildren<WizrdBossHealthBarController>().enabled = true;
+        //m_PlayerUICanvas.GetComponentInChildren<WizrdBossHealthBarController>().enabled = true;
     }
 
     public void TestVal(bool _oldVal, bool _newVal)
@@ -309,7 +328,6 @@ public class Network_Player_Controller : NetworkBehaviour
     {
 
         if (!IsOwner) return;
-        
 
         if (/*!getBlockState()*/!performingAction() && moveDirection != Vector3.zero)
         {
