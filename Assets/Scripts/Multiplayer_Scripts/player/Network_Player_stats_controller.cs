@@ -1,6 +1,8 @@
 using Unity.Netcode;
 using UnityEngine;
 
+
+//Written by Matthew Whistle
 public class Network_Player_stats_controller : NetworkBehaviour
 {
     [SerializeField] NetworkVariable<float> networkCurrentHP = new NetworkVariable<float>(0);
