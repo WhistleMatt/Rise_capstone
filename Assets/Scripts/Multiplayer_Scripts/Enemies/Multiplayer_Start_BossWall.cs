@@ -7,6 +7,8 @@ using UnityEngine;
 public class Multiplayer_Start_BossWall : NetworkBehaviour
 {
 
+    //Written by Matthew Whistle
+
     [System.Serializable]
     public struct WallDataStruct : INetworkSerializable
     {

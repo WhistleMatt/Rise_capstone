@@ -4,6 +4,8 @@ using Unity.Networking;
 using System.Collections.Generic;
 using FSMC.Runtime;
 
+//Written by Matthew Whistle
+
 public class MultiplayerCheckpointScript : NetworkBehaviour
 {
 
@@ -23,13 +25,14 @@ public class MultiplayerCheckpointScript : NetworkBehaviour
 
     public void RefreshAll()
     {
-        ResetBreakables();
-        ResetEnemies();
+        ResetBreakablesRpc();
+        ResetEnemiesRpc();
         ResetHealsRpc();
         RestoreHP();
     }
 
-    public void ResetBreakables()
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void ResetBreakablesRpc()
     {
         var crates = GameObject.FindObjectsByType<BoxDestroyScript>(FindObjectsSortMode.None);
 
@@ -40,12 +43,18 @@ public class MultiplayerCheckpointScript : NetworkBehaviour
 
     }
 
-    public void ResetEnemies()
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void ResetEnemiesRpc()
     {
-        foreach (EnemyPathController enemyPathController in _enemies)
+        var enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (var enemy in enemies)
         {
-            enemyPathController.gameObject.GetComponent<Multiplayer_Enemy_Stat_Controller>().ResfreshStatsRpc();
-            Debug.Log(enemyPathController.gameObject.GetComponent<FSMC_Executer>().GetCurrentState().Name);
+            Destroy(enemy);
+        }
+        var spawners = GameObject.FindObjectsByType<Multiplayer_Enemy_Spawner>(FindObjectsSortMode.InstanceID);
+        foreach (var spawner in spawners)
+        {
+            spawner.SpawnRpc();
         }
     }
 

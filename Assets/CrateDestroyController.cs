@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 //Nicolas Chatziargiriou
@@ -9,10 +10,18 @@ public class CrateDestroyController : MonoBehaviour
     [SerializeField] AudioClip destroySound;
     [SerializeField] BoxCollider Collider;
     [SerializeField] BoxCollider Trigger;
+
+    private NetworkObject netob;
+
     private GameObject model;
     public HitBoxController.ePlayer id;
     private bool spawnedBroken=false;
     // Start is called before the first frame update
+    private void Start()
+    {
+        netob = GetComponent<NetworkObject>();
+    }
+
 
     public void toggleDamged()
     {
@@ -25,8 +34,16 @@ public class CrateDestroyController : MonoBehaviour
         this.gameObject.GetComponent<AudioSource>().Play();
         if (!spawnedBroken)
         {
-            model = Instantiate(destroyedModel);
-            spawnedBroken = true;
+            if (netob != null)
+            {
+                model = NetworkManager.Instantiate(destroyedModel);
+                spawnedBroken = true;
+            }
+            else
+            {
+                model = Instantiate(destroyedModel);
+                spawnedBroken = true;
+            }
         }
      
         model.transform.position = this.gameObject.transform.position;

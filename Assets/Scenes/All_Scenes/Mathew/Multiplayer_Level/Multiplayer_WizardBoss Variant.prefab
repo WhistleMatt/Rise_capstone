@@ -62,7 +62,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5684975544130518284, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 3657450805
+      value: 874277431
       objectReference: {fileID: 0}
     - target: {fileID: 5684975544130518284, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
       propertyPath: SceneMigrationSynchronization
@@ -72,6 +72,10 @@ PrefabInstance:
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
       value: 1017859962
       objectReference: {fileID: 0}
+    - target: {fileID: 6807118129678380511, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
+      propertyPath: _victoryDisplay
+      value: 
+      objectReference: {fileID: 5189954246093015889, guid: 049b855445191a54b8bea3a7873149cf, type: 3}
     - target: {fileID: 8656895956196318289, guid: 2a4546767267e3d4dbdd9e0781f75134, type: 3}
       propertyPath: _spawns.Array.size
       value: 4

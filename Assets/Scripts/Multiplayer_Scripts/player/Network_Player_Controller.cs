@@ -1,11 +1,10 @@
 using Unity.Netcode;
-using Unity.Networking;
-using Unity.Services.Lobbies;
-using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
+
+//Extended from the code of Nicolas Chatziargiriou
+//extended by Matthew Whistle
 
 public class Network_Player_Controller : NetworkBehaviour
 {
@@ -19,7 +18,6 @@ public class Network_Player_Controller : NetworkBehaviour
     public float gravity;
     public float jumpPower;
     public Animator animatorController;
-    //ublic float mass;
 
     private InputAction move;
     private InputAction jump;
@@ -78,11 +76,7 @@ public class Network_Player_Controller : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        testBool.OnValueChanged += TestVal;
-
         GameObject.Find("DebugCamera").SetActive(false);
-
-        //if (IsHost) testBool.Value = true;
 
         NetworkManager.Singleton.OnClientDisconnectCallback += Singleton_OnClientDisconnectCallback;
         NetworkManager.Singleton.OnClientConnectedCallback += Singleton_OnClientConnectedCallback;
@@ -101,19 +95,6 @@ public class Network_Player_Controller : NetworkBehaviour
         m_HealItemCanvas.SetActive(true);
         m_PlayerUICanvas.SetActive(true);
         GetComponent<Use_Item_Multiplayer>().ResetHealsRPC();
-        
-        //PlayFabStats.Instance.GetStatistics();
-
-        //if (PlayFabStats.Instance.JustStarted == 0)
-        //{
-        //transform.position = new Vector3 (6f, 0.125f, 0f);
-        //PlayFabStats.Instance.UpdateStats((int)playerStatsController.getPHealthMax(), (int)playerStatsController.getPHealth(), (int)gameObject.transform.position.x, (int)gameObject.transform.position.y, (int)gameObject.transform.position.z, 1, (int)playerStatsController.getManaMax(), (int)playerStatsController.getPMana(), (int)playerStatsController.getStaminahMax(), (int)playerStatsController.getPStamina(), (int)playerStatsController.getAttckMax(), (int)playerStatsController.getPAttck(), (int)playerStatsController.getPDefenseMax(), (int)playerStatsController.getPDefense(), (int)playerStatsController.getExperiancePoints());
-        //}
-
-        //if (transform.position != PlayFabStats.Instance.GetAsVector())
-        //{
-        //hasSpawned = false;
-        //}
 
         base.OnNetworkSpawn();
     }
@@ -251,15 +232,7 @@ public class Network_Player_Controller : NetworkBehaviour
     {
         return this.animatorController.GetBool("performingAction");
     }
-    /*
-    private void Jump(InputAction.CallbackContext context)
-    {
-        if (controller.isGrounded)
-        {
-           
-            controller.Move(new Vector3(0, jumpPower, 0) * Time.deltaTime);
-        }
-    }*/
+
     void Update()
     {
         if (!IsOwner)
@@ -290,7 +263,7 @@ public class Network_Player_Controller : NetworkBehaviour
 
         if (updateStats == true)
         {
-            // GameObject.FindGameObjectWithTag("Single").GetComponent<PlayFabStats>().run = true;
+            
         }
         if (!hasSpawned)
         {
@@ -339,34 +312,13 @@ public class Network_Player_Controller : NetworkBehaviour
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
             Vector3 moveDirectionUpdated = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
             
-            if (!IsHost)
-            {
-                //NetworkVectorData data = new NetworkVectorData(moveDirectionUpdated.x, moveDirectionUpdated.y, moveDirectionUpdated.z, angle);
-                //SetPositionServerRpc(true, OwnerClientId);
-            }
-            else if (IsHost)
-            {
-                if (this.testBool.Value != true)
-                {
-                    this.testBool.Value = true;
-                }
-            }
+
             controller.Move(moveDirectionUpdated.normalized * moveSpeed * Time.deltaTime);
             updateStats = false;
         }
         else
         {
-            //if (IsHost)
-            //{
-            //    if (this.testBool.Value != false)
-            //    {
-            //        this.testBool.Value = false;
-            //    }
-            //}
-            //else
-            //{
-            //    SetPositionServerRpc(false, OwnerClientId);
-            //}
+
             this.animatorController.SetBool("isWalking", false);
             testBool.Value = false;
             RenableAnimator();
@@ -378,51 +330,6 @@ public class Network_Player_Controller : NetworkBehaviour
             controller.Move(new Vector3(0, gravity, 0) * Time.deltaTime);
         }
     }
-
-    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-    public void SetPositionServerRpc(bool IsWalking, ulong playerID)
-    {
-        if (OwnerClientId != playerID) return;
-
-        //Vector3 newMoveVector = new Vector3(_data._x, _data._y, _data._z);
-
-        //Debug.Log(newMoveVector);
-        if (/*!getBlockState()*/!performingAction() && IsWalking)
-        {
-            if (this.testBool.Value != true)
-            {
-                this.testBool.Value = true;
-            }
-            if (!this.animatorController.GetBool("isWalking"))
-            {
-                this.animatorController.SetBool("isWalking", true);
-            }
-        }
-        //Debug.Log("Client schmoovin");
-        //testBool.Value = true;
-
-        //        controller.Move(newMoveVector.normalized * moveSpeed * Time.deltaTime);
-        //    }
-        else
-        {
-            if (this.testBool.Value != false)
-            {
-                this.testBool.Value = false;
-            }
-            if (this.animatorController.GetBool("isWalking"))
-            {
-                this.animatorController.SetBool("isWalking", false);
-            }
-        }
-
-    //    //apply gravity 
-    //    if (!controller.isGrounded)
-    //    {
-    //        controller.Move(new Vector3(0, gravity, 0) * Time.deltaTime);
-
-    //    }
-    //    //NetworkVectorData data = new NetworkVectorData(moveDirection.x, moveDirection.y, moveDirection.z);
-        }
 
     public void UnpauseFromUI()
     {
@@ -444,8 +351,6 @@ public class Network_Player_Controller : NetworkBehaviour
         if (IsHost)
         {
             await Multiplayer_lobby_manager.Instance.CloseLobby();
-            //NetworkManager.Singleton.Shutdown();
-            //DisconnectFromLobbyClientRpc();
         }
         else
         {

@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &3331440403748380184
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 60874740157067614, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4912635618021654408, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 2.63
+      objectReference: {fileID: 0}
+    - target: {fileID: 7106399599332152569, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7367269444989080905, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_Name
+      value: knight_statue (1) Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 7367269444989080905, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7367269444989080905, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 7789268728043068537, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887522765234343923, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -84.661
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887522765234343923, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.425
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887522765234343923, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -100.82
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887522765234343923, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887522765234343923, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887522765234343923, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887522765234343923, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887522765234343923, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887522765234343923, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887522765234343923, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8028677077665913959, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8336499059859599544, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}
+      propertyPath: m_text
+      value: 'Quest complete.
+
+
+        please return to the hub'
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d3991a9f402c5bf4fb5a4eb929cc91a1, type: 3}

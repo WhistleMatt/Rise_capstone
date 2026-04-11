@@ -17,6 +17,7 @@ public class SearchOptionsPanelScript : MonoBehaviour
     [SerializeField] private GameObject m_MainCanvas;
     [SerializeField] private GameObject m_optionsPanel;
     [SerializeField] private GameObject m_LobbySearchPanel;
+    [SerializeField] private GameObject m_PrivateSearchPanel;
     [SerializeField] private GameObject m_WaitingRoomCanvas;
 
     public bool SearchToggle { get; private set; } = false;
@@ -36,30 +37,8 @@ public class SearchOptionsPanelScript : MonoBehaviour
 
         PrivateJoinBTN.onClick.AddListener(async () =>
         {
-            if (LobbyID.Length > 0)
-            {
-                string name = "Foo Fighter";
-                string Username = PlayerPrefs.GetString("USERNAME", name);
-
-                JoinLobbyByIdOptions options = new JoinLobbyByIdOptions()
-                {
-                    Password = PasswordInput,
-                    Player = new Player()
-                    {
-                        Data = new Dictionary<string, PlayerDataObject>
-                        {
-                            {"PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, Username)}
-                        },
-                    }
-                };
-
-                var result = await Multiplayer_lobby_manager.Instance.JoinPrivateLobbyBYID(LobbyID, options);
-                if (result)
-                {
-                    m_WaitingRoomCanvas.SetActive(true);
-                    m_MainCanvas.SetActive(false);
-                }
-            }
+            m_PrivateSearchPanel.SetActive(true);
+            this.gameObject.SetActive(false);
         });
 
         cancelBTN.onClick.AddListener(() =>
@@ -70,20 +49,5 @@ public class SearchOptionsPanelScript : MonoBehaviour
 
         privateRoomCanvas.SetActive(false);
 
-    }
-
-    public void ToggleSearch()
-    {
-        SearchToggle = !SearchToggle;
-        if(SearchToggle)
-        {
-            cancelBTN.GetComponent<RectTransform>().localPosition = new Vector3(0f, -500f, 0f);
-            privateRoomCanvas.SetActive(true);
-        }
-        else
-        {
-            cancelBTN.GetComponent<RectTransform>().localPosition = new Vector3(0f, 100f, 0f);
-            privateRoomCanvas.SetActive(false);
-        }
     }
 }

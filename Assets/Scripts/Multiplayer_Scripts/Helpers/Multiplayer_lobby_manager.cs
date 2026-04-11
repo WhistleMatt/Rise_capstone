@@ -1,10 +1,7 @@
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
-using Unity.Networking.Transport;
-using Unity.Networking.Transport.Relay;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Lobbies;
@@ -13,7 +10,10 @@ using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using WebSocketSharp;
+
+
+//Written by Matthew Whistle
+
 
 public class Multiplayer_lobby_manager : MonoBehaviour
 {
@@ -24,7 +24,6 @@ public class Multiplayer_lobby_manager : MonoBehaviour
     [SerializeField] private DisconnectedUI disconUi;
 
     [SerializeField] private Lobby JoinedLobby;
-    [SerializeField] private string lobby_joinname;
     [SerializeField] private string lobbyid;
     [SerializeField] string JoinCode;
 
@@ -33,13 +32,10 @@ public class Multiplayer_lobby_manager : MonoBehaviour
 
     private Player ourPlayer;
 
-    private bool canConnect = false;
-
     public string ErrorText;
 
     private float timer = 2f;
     private float updateTimer = 2f;
-    private float hostUpdateTimer = 0f;
     private float hostTimer = 5.1f;
 
     public string OurUserName;
@@ -213,7 +209,7 @@ public class Multiplayer_lobby_manager : MonoBehaviour
 
                 Debug.Log("Username1: " + result);
 
-                if (!result.Contains("Offline"))
+                if ((!result.Contains("Offline")) && result.Contains("Online"))
                 {
                     disconCanvas.SetActive(true);
                     disconUi.gameObject.SetActive(true);
@@ -221,7 +217,7 @@ public class Multiplayer_lobby_manager : MonoBehaviour
                     GameObject.Find("LobbyCanvas").SetActive(false);
                 }
 
-                result = await AuthenticationService.Instance.UpdatePlayerNameAsync("baller");
+                result = await AuthenticationService.Instance.UpdatePlayerNameAsync("Online");
 
 
                 Debug.Log("Username2: " + result);
@@ -600,8 +596,6 @@ public class Multiplayer_lobby_manager : MonoBehaviour
 
             await LobbyService.Instance.SubscribeToLobbyEventsAsync(JoinedLobby.Id, ourCallbacks);
 
-            lobby_joinname = JoinedLobby.Name;
-
             lobbyid = JoinedLobby.Id;
 
             var canvas = GameObject.Find("LobbyCanvas");
@@ -642,8 +636,6 @@ public class Multiplayer_lobby_manager : MonoBehaviour
             JoinedLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobby.Id, _options);
 
             await LobbyService.Instance.SubscribeToLobbyEventsAsync(JoinedLobby.Id, ourCallbacks);
-
-            lobby_joinname = JoinedLobby.Name;
 
             HostID = JoinedLobby.HostId;
 
@@ -693,7 +685,7 @@ public class Multiplayer_lobby_manager : MonoBehaviour
 
     private void OurCallbacks_LobbyDeleted()
     {
-        //Debug.Log("this bitch deleted, yeet.");
+        
 
         //throw new System.NotImplementedException();
     }
@@ -881,6 +873,7 @@ public class Multiplayer_lobby_manager : MonoBehaviour
 
                 await LobbyService.Instance.UpdatePlayerAsync(JoinedLobby.Id, ourPlayer.Id, options);
                 await LobbyService.Instance.RemovePlayerAsync(JoinedLobby.Id, ourPlayer.Id);
+                NetworkManager.Singleton.Shutdown();
                 return true;
             }
         }

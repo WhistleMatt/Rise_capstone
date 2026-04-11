@@ -3,6 +3,9 @@ using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
+//Extended from the code of Nicolas Chatziargiriou
+//extended by Matthew Whistle
+
 public class Multiplayer_WizardController : NetworkBehaviour
 {
     [SerializeField] private List<GameObject> _spawns;
@@ -29,7 +32,6 @@ public class Multiplayer_WizardController : NetworkBehaviour
 
         _spawns = GameObject.FindGameObjectsWithTag("BossTPoint").ToList<GameObject>();
 
-        //this.gameObject.SetActive(false);
         base.OnNetworkSpawn();
     }
 
@@ -37,23 +39,8 @@ public class Multiplayer_WizardController : NetworkBehaviour
     void Update()
     {
         if (!networkstarted) return;
-        //this.transform.LookAt(GameObject.FindGameObjectWithTag("Player").transform.position);
         _teleportTimer = _teleportTimer + Time.deltaTime;
-        /*
-        var ourObjects = GameObject.FindObjectsByType<Network_Player_Controller>(FindObjectsSortMode.None);
-        foreach (Network_Player_Controller controller in ourObjects)
-        {
-            if (controller.AreWeOwner())
-            {
-                if (controller.IsOwnedByServer)
-                {
-                    UpdateTeleportTimerRpc(_teleportTimer);
-                }
-            }
-        }
- 
-        _teleportTimer = _TeleportTimer.Value;
-        */
+
 
         if (_teleportTimer >= _teleportTime)
         {
@@ -70,7 +57,7 @@ public class Multiplayer_WizardController : NetworkBehaviour
         {
             this.gameObject.transform.localScale = new Vector3(0f, 0f, 0f);
         }
-        //this.gameObject.transform.localScale = new Vector3(1,1,1);
+
         _shrinkTimer = _shrinkTimer + Time.deltaTime;
         var ourObjects = GameObject.FindObjectsByType<Network_Player_Controller>(FindObjectsSortMode.None);
         foreach (Network_Player_Controller controller in ourObjects)
@@ -83,7 +70,7 @@ public class Multiplayer_WizardController : NetworkBehaviour
                 }
             }
         }
-        //_shrinkTimer = _ShrinkTimer.Value;
+
 
     }
     private void shootFireball()

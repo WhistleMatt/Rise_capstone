@@ -1,6 +1,9 @@
 using Unity.Netcode;
 using UnityEngine;
 
+//Extended from the code of Nicolas Chatziargiriou
+//extended by Matthew Whistle
+
 public class Multiplayer_WizardStat_Controller : NetworkBehaviour
 {
     [SerializeField] NetworkVariable<float> _pHealth = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -13,6 +16,7 @@ public class Multiplayer_WizardStat_Controller : NetworkBehaviour
     [SerializeField] private GameObject _pushBox;
     [SerializeField] private GameObject _knightStatue;
     [SerializeField] private GameObject _hpBar;
+    [SerializeField] private GameObject _victoryDisplay;
 
     private bool m_isDead = false;
     private bool gaveXP = false;
@@ -120,28 +124,13 @@ public class Multiplayer_WizardStat_Controller : NetworkBehaviour
     private void Update()
     {
 
-        Debug.Log("Boss HP: " + getPHealth());
-
         if (getPHealth() <= 0)
         {
-            //  this.gameObject.GetComponent<Animator>().SetTrigger("isDead");
-
             _pushBox.gameObject.SetActive(false);
-            //_knightStatue.SetActive(true);
             m_isDead = true;
+            Instantiate(_victoryDisplay);
             this.gameObject.SetActive(false);
-            //_hpBar.SetActive(false);
 
-            //GameObject.FindGameObjectWithTag("SoulGirl").GetComponent<SoulsGirlDialogue>().chapter = 31;
-            //GameObject.FindGameObjectWithTag("SoulGirl").GetComponent<DialogueController>().recieveDialogue();
-
-            /*
-            if (this.gameObject.tag == "Enemy" && !gaveXP)
-            {
-                GameObject.FindWithTag("Player").GetComponent<PlayerStatsController>().setExperiancePoints(GameObject.FindWithTag("Player").GetComponent<PlayerStatsController>().getExperiancePoints() + 2);
-                gaveXP = true;
-            }
-            */
         }
 
     }

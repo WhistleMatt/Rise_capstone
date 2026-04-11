@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 616083788119793997, guid: 6a9004d5c58324e4a80a8e1ccdd98bab, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4678568777662558725, guid: 6a9004d5c58324e4a80a8e1ccdd98bab, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -68,14 +72,18 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8008765000606406812, guid: 6a9004d5c58324e4a80a8e1ccdd98bab, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4678568777662558725, guid: 6a9004d5c58324e4a80a8e1ccdd98bab, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5674248029934485860, guid: 6a9004d5c58324e4a80a8e1ccdd98bab, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 8008765000606406812, guid: 6a9004d5c58324e4a80a8e1ccdd98bab, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6264673572169998921}
+      addedObject: {fileID: -8970077770531230008}
     - targetCorrespondingSourceObject: {fileID: 5674248029934485860, guid: 6a9004d5c58324e4a80a8e1ccdd98bab, type: 3}
       insertIndex: -1
       addedObject: {fileID: 752385776941051603}
@@ -94,31 +102,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5674248029934485860, guid: 6a9004d5c58324e4a80a8e1ccdd98bab, type: 3}
   m_PrefabInstance: {fileID: 5407577731135604617}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6264673572169998921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 411351277412419309}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1359151018
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 0
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
 --- !u!114 &752385776941051603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,6 +221,36 @@ MonoBehaviour:
   _damageSoundSource: {fileID: 0}
   _mouseX: 0
   _mouseY: 0
+--- !u!1 &2607384203207073557 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8008765000606406812, guid: 6a9004d5c58324e4a80a8e1ccdd98bab, type: 3}
+  m_PrefabInstance: {fileID: 5407577731135604617}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-8970077770531230008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2607384203207073557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 4000995966
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!95 &6349677136506226221 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 1375012945204412836, guid: 6a9004d5c58324e4a80a8e1ccdd98bab, type: 3}

@@ -41,6 +41,8 @@ public class PlayerStatsController : MonoBehaviour
 
     [SerializeField] private bool isOnline = false;
 
+    private bool post_death_called = false;
+
     private void Awake()
     {
        // _Singleton.gameObject.GetComponent<PlayFabStats>().GetStatistics();
@@ -280,8 +282,9 @@ public class PlayerStatsController : MonoBehaviour
                     {
                         if (Multiplayer_lobby_manager.Instance != null)
                         {
-                            if (isOnline)
+                            if (isOnline && !post_death_called)
                             {
+                                post_death_called = true;
                                 await Multiplayer_lobby_manager.Instance.LobbyScreenQuit();
                             }
                         }
